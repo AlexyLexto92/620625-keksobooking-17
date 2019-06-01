@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Сергеевич](https://up.htmlacademy.ru/javascript/17/user/620625).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Вечканов],(https://htmlacademy.ru/profile/id902303).
 
 ---
 
