@@ -2,21 +2,20 @@
 var mapVision = document.querySelector('.map');
 mapVision.classList.remove('map--faded');
 var mapPin = document.querySelector('.map__pin');
-var mapPinWidth = mapPin.offsetWidth; //ширина окна
-var mapPinHeight = mapPin.offsetHeight; //высота окна
-var mapHeigth = mapVision.offsetHeight; //высота пина
-var mapWidth = mapVision.offsetWidth; //ширина пина
+var mapPinWidth = mapPin.offsetWidth; //  ширина окна
+var mapPinHeight = mapPin.offsetHeight; //  высота окна
+var mapWidth = mapVision.offsetWidth; //  ширина пина
 
-//тип квартиры
+//  тип квартиры
 var typeArray = ['palace', 'flat', 'house', 'bungalo'];
 
-//создания массива с адресами аватарок
+//  создания массива с адресами аватарок
 var avatarArray = [];
 
 function avatar(intArray, count) {
   for (var i = 1; i <= count; i++) {
     if (i < 10 && i > 0) {
-      var s = "0" + i;
+      var s = '0' + i;
     } else {
       s = i;
     }
@@ -24,24 +23,23 @@ function avatar(intArray, count) {
     intArray.push(source);
   }
   return intArray;
-};
+}
 avatar(avatarArray, 8);
 
-
-
-//сортировка ейтса
+//  сортировка ейтса
 function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
   }
   return array;
 }
 shuffleArray(avatarArray);
 
-//функция генерации КООРДИНАТ
+//  функция генерации КООРДИНАТ
 var locations = [];
-
 
 function randomNumber(min, max, count, intArray) {
   for (var i = 1; i <= count; i++) {
@@ -54,8 +52,9 @@ function randomNumber(min, max, count, intArray) {
 }
 randomNumber(130, 630, 8, locations);
 
-//общий обьект оьектов для построения
+//  общий обьект оьектов для построения
 var similarAds = [];
+
 function generatePinArray(targetArray, count) {
 
   for (var i = 0; i <= count - 1; i++) {
@@ -67,17 +66,18 @@ function generatePinArray(targetArray, count) {
     location.x = locations[i].x;
     location.y = locations[i].y;
     targetArray.push({
-      author,
-      offer,
-      location
+      avatar: author,
+      type: offer,
+      x: location,
+      y: location
     });
   }
   return targetArray;
 }
 generatePinArray(similarAds, 8);
-console.log(similarAds);
 
-//3
+
+//  3
 /*
 var similarMapPin=document.querySelector('#pin').content.querySelector('.map__pin')
 
