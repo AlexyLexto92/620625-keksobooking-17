@@ -1,10 +1,11 @@
 'use strict';
 var mapVision = document.querySelector('.map');
 mapVision.classList.remove('map--faded');
-var mapPin = document.querySelector('.map__pin');
+var mapPin = document.querySelector('.map__pins');
 var mapPinWidth = mapPin.offsetWidth; //  ширина окна
-var mapPinHeight = mapPin.offsetHeight; //  высота окна
-var mapWidth = mapVision.offsetWidth; //  ширина пина
+var pin = document.querySelector('.map__pin');
+var pinWidth = pin.offsetWidth; // ширина пина
+var pinHeight = pin.offsetHeight; //  высота пина
 
 //  тип квартиры
 var typeArray = ['palace', 'flat', 'house', 'bungalo'];
@@ -44,8 +45,8 @@ var locations = [];
 function randomNumber(min, max, count, intArray) {
   for (var i = 1; i <= count; i++) {
     intArray.push({
-      x: Math.round(0 + Math.random() * (mapWidth - 0)) - mapPinHeight,
-      y: Math.round(min + Math.random() * (max - min)) - mapPinWidth / 2
+      x: Math.round(0 + Math.random() * (mapPinWidth - 0)) - pinWidth / 2,
+      y: Math.round(min + Math.random() * (max - min)) - pinHeight
     });
   }
   return intArray[i];
@@ -56,16 +57,23 @@ randomNumber(130, 630, 8, locations);
 var similarAds = [];
 
 function generatePinArray(targetArray, count) {
-
+  var author = {};
+  var offer = {};
+  var location = {};
   for (var i = 0; i <= count - 1; i++) {
-    var author = {};
-    var offer = {};
-    var location = {};
-    author.avatar = avatarArray[i];
-    offer.type = typeArray[0 + Math.floor(Math.random() * (typeArray.length - 0))];
-    location.x = locations[i].x;
-    location.y = locations[i].y;
-    targetArray.push({
+
+    author = {
+      avatar: avatarArray[i]
+    };
+    offer = {
+      type: typeArray[0 + Math.floor(Math.random() * (typeArray.length - 0))]
+    };
+    location = {
+      x: locations[i].x,
+      y: locations[i].y
+    };
+    targetArray.push({ //  вот тут проблемное место,оно каким-то образом ломает сборку массива обьектов
+      //  если же писать в ES6 всё сразу становиться гуд
       avatar: author,
       type: offer,
       x: location,
@@ -76,13 +84,21 @@ function generatePinArray(targetArray, count) {
 }
 generatePinArray(similarAds, 8);
 
-
 //  3
-/*
-var similarMapPin=document.querySelector('#pin').content.querySelector('.map__pin')
+var similarMapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 
-function createPin(left,top,src,alt){
-  var PinElement=similarMapPin.cloneNode(true);
+var createPin = function (properties) {
+  var PinElement = similarMapPinTemplate.cloneNode(true);
+  PinElement.style.top = properties.location.y + 'px';
+  PinElement.style.left = properties.location.x + 'px';
+  PinElement.querySelector('img').setAttribute('src', properties.author);
+  PinElement.querySelector('img').setAttribute('alt', 'Некий альтернативній текст');
+  return PinElement;
+};
+var fragment = document.createDocumentFragment();
+for (var i = 0; i < similarAds.length; i++) {
+  fragment.appendChild(createPin(similarAds[i]));
+
 }
-*/
+mapPin.appendChild(fragment);
