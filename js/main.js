@@ -10,95 +10,92 @@ var pinHeight = pin.offsetHeight; //  высота пина
 //  тип квартиры
 var typeArray = ['palace', 'flat', 'house', 'bungalo'];
 
-//  создания массива с адресами аватарок
-var avatarArray = [];
-
-function avatar(intArray, count) {
+//  функция создания  массива значений src
+function avatar(count) {
+  //  обьявление временого массива
+  var newArr = [];
   for (var i = 1; i <= count; i++) {
-    if (i < 10 && i > 0) {
+    //  условие по которому мы будем записывать числа в src если число > 10
+    if (i < 10 || i > 0) {
       var s = '0' + i;
     } else {
+      //  если i >=10 то "0" перед числом не ставиться
       s = i;
     }
-    var source = 'img/avatars/user' + s + '.png';
-    intArray.push(source);
+    newArr.push('img/avatars/user' + s + '.png');
   }
-  return intArray;
+  return newArr;
 }
-avatar(avatarArray, 8);
+//  создания массива с адресами аватарок
+var avatarArray = avatar(8);
 
-//  сортировка ейтса
-function shuffleArray(array) {
+//  сортировка ейтса ,на вход берет массив array ,на выходе получаем массив arr
+function sortArray(array) {
   for (var i = array.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var temp = array[i];
     array[i] = array[j];
     array[j] = temp;
   }
+  //  по логике этого  сортировщика он выводит входящий массив
   return array;
 }
-shuffleArray(avatarArray);
+//  создания сортированого массива с адресами аватарок
+var sortedAvatarArray = sortArray(avatarArray);
 
 //  функция генерации КООРДИНАТ
-var locations = [];
-
-function randomNumber(min, max, count, intArray) {
+function locationsCoordinats(min, max, count) {
+  //   создание пустого массива
+  var arr = [];
   for (var i = 1; i <= count; i++) {
-    intArray.push({
+    arr.push({
       x: Math.round(0 + Math.random() * (mapPinWidth - 0)) - pinWidth / 2,
       y: Math.round(min + Math.random() * (max - min)) - pinHeight
     });
   }
-  return intArray[i];
+  return arr;
 }
-randomNumber(130, 630, 8, locations);
-
-//  общий обьект оьектов для построения
-var similarAds = [];
-
-function generatePinArray(targetArray, count) {
-  var author = {};
-  var offer = {};
-  var location = {};
-  for (var i = 0; i <= count - 1; i++) {
-
-    author = {
-      avatar: avatarArray[i]
-    };
-    offer = {
-      type: typeArray[0 + Math.floor(Math.random() * (typeArray.length - 0))]
-    };
-    location = {
-      x: locations[i].x,
-      y: locations[i].y
-    };
-    targetArray.push({ //  вот тут проблемное место,оно каким-то образом ломает сборку массива обьектов
-      //  если же писать в ES6 всё сразу становиться гуд
-      avatar: author,
-      type: offer,
-      x: location,
-      y: location
+//  создание  массива с координатами 'Х' и 'У'
+var locations = locationsCoordinats(130, 630, 8);
+//  функция для построения массива обьектов со свойствами
+function generatePinArray(count) {
+  //  создал пустой массив для занесения в него всех данных
+  var arr = [];
+  for (var i = 0; i < count; i++) {
+    //  пушим обьекты с свойствами в массив arr
+    arr.push({
+      author: {
+        avatar: sortedAvatarArray[i]
+      },
+      offer: {
+        type: typeArray[0 + Math.floor(Math.random() * (typeArray.length - 0))]
+      },
+      location: {
+        x: locations[i].x,
+        y: locations[i].y
+      }
     });
   }
-  return targetArray;
+  return arr;
 }
-generatePinArray(similarAds, 8);
+//  создание финального массива с  8 обьектами для отрисовки елементов pin
+var similarAds = generatePinArray(8);
 
-//  3
+
+//  3 часть задания
 var similarMapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
 
 var createPin = function (properties) {
   var PinElement = similarMapPinTemplate.cloneNode(true);
   PinElement.style.top = properties.location.y + 'px';
   PinElement.style.left = properties.location.x + 'px';
-  PinElement.querySelector('img').setAttribute('src', properties.author);
+  PinElement.querySelector('img').setAttribute('src', properties.author.avatar);
   PinElement.querySelector('img').setAttribute('alt', 'Некий альтернативній текст');
   return PinElement;
 };
 var fragment = document.createDocumentFragment();
 for (var i = 0; i < similarAds.length; i++) {
   fragment.appendChild(createPin(similarAds[i]));
-
 }
 mapPin.appendChild(fragment);
+
