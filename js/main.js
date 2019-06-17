@@ -1,4 +1,5 @@
 'use strict';
+/*
 var mapVision = document.querySelector('.map');
 mapVision.classList.remove('map--faded');
 var mapPin = document.querySelector('.map__pins');
@@ -99,3 +100,4 @@ for (var i = 0; i < similarAds.length; i++) {
 }
 mapPin.appendChild(fragment);
 
+*/
