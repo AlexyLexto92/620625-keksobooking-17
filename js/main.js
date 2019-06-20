@@ -1,6 +1,7 @@
 'use strict';
+
 var mapVision = document.querySelector('.map');
-mapVision.classList.remove('map--faded');
+//  mapVision.classList.remove('map--faded');
 var mapPin = document.querySelector('.map__pins');
 var mapPinWidth = mapPin.offsetWidth; //  ширина окна
 var pin = document.querySelector('.map__pin');
@@ -49,8 +50,8 @@ function locationsCoordinats(min, max, count) {
   var arr = [];
   for (var i = 1; i <= count; i++) {
     arr.push({
-      x: Math.round(0 + Math.random() * (mapPinWidth - 0)) - pinWidth / 2,
-      y: Math.round(min + Math.random() * (max - min)) - pinHeight
+      x: Math.round(0 + Math.random() * (mapPinWidth - 0)),
+      y: Math.round(min + Math.random() * (max - min))
     });
   }
   return arr;
@@ -87,8 +88,8 @@ var similarMapPinTemplate = document.querySelector('#pin').content.querySelector
 
 var createPin = function (properties) {
   var PinElement = similarMapPinTemplate.cloneNode(true);
-  PinElement.style.top = properties.location.y + 'px';
-  PinElement.style.left = properties.location.x + 'px';
+  PinElement.style.top = properties.location.y - pinHeight + 'px';
+  PinElement.style.left = properties.location.x - pinWidth / 2 + 'px';
   PinElement.querySelector('img').setAttribute('src', properties.author.avatar);
   PinElement.querySelector('img').setAttribute('alt', 'Некий альтернативній текст');
   return PinElement;
@@ -97,5 +98,59 @@ var fragment = document.createDocumentFragment();
 for (var i = 0; i < similarAds.length; i++) {
   fragment.appendChild(createPin(similarAds[i]));
 }
-mapPin.appendChild(fragment);
 
+//  большая метка нанеактивной карте
+var mapPinMain = document.querySelector('.map__pin--main');
+//  видимая часть карты
+
+var formFieldAll = document.querySelector('.ad-form');
+// находим все fieldset формы обьявления
+var formFieldset = formFieldAll.querySelectorAll('fieldset');
+//  форма фильтры
+var formFilters = document.querySelector('.map__filters');
+formFilters.classList.add('ad-form--disabled');
+//  находим все select формы фильтров
+var formFiltersFieldset = formFilters.querySelectorAll('select');
+//  добавляем всем филдсетам disabled=true
+addDisabled(formFiltersFieldset, true);
+
+//  форма отправки обьявления
+var noticeBlock = document.querySelector('.notice');
+// форма блока отправки обьявления
+var noticeBlockForm = noticeBlock.querySelector('.ad-form');
+//  добаления атрабута ACTION
+noticeBlockForm.action = 'https://js.dump.academy/keksobooking';
+//  форма адресса  блока отправки обьявления
+var noticeBlockFormAdress = noticeBlockForm.querySelector('#address');
+//  функция добавления атрибута Disabled в елемента массива
+function addDisabled(elementArray, bool) {
+  for (i = 0; i < elementArray.length; i++) {
+    elementArray[i].disabled = bool;
+  }
+  return elementArray;
+}
+//  добавляем всем филдсетам disabled=true
+addDisabled(formFieldset, true);
+//  событие при счелчке на pin
+mapPinMain.addEventListener('click', function () {
+  //  убираем класс map--faded
+  mapVision.classList.remove('map--faded');
+  //  убираем у формы  ad-form--disabled
+  formFieldAll.classList.remove('ad-form--disabled');
+  //  изменяем всем филдсетам disabled=false
+  addDisabled(formFieldset, false);
+  //  добавляем всем филдсетам disabled=false
+  addDisabled(formFiltersFieldset, false);
+  // разблокируем форму с фильтрами
+  formFilters.classList.remove('ad-form--disabled');
+
+  //  вычисляем размеры mapPinMain
+  var mapPinMainWidth = mapPinMain.offsetWidth;
+  var mapPinMainHeigth = mapPinMain.offsetHeight;
+  //  кординаты pin*a на карте
+  var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 22;
+  var mapPinCordinatX = mapPinMain.offsetLeft + mapPinMainWidth / 2;
+  // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
+  noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
+  mapPin.appendChild(fragment);
+});
