@@ -1,7 +1,7 @@
 'use strict';
 
 var mapVision = document.querySelector('.map');
-//mapVision.classList.remove('map--faded');
+//  mapVision.classList.remove('map--faded');
 var mapPin = document.querySelector('.map__pins');
 var mapPinWidth = mapPin.offsetWidth; //  ширина окна
 var pin = document.querySelector('.map__pin');
@@ -43,7 +43,7 @@ function sortArray(array) {
 }
 //  создания сортированого массива с адресами аватарок
 var sortedAvatarArray = sortArray(avatarArray);
-debugger
+
 //  функция генерации КООРДИНАТ
 function locationsCoordinats(min, max, count) {
   //   создание пустого массива
@@ -99,8 +99,6 @@ for (var i = 0; i < similarAds.length; i++) {
   fragment.appendChild(createPin(similarAds[i]));
 }
 
-
-
 //  большая метка нанеактивной карте
 var mapPinMain = document.querySelector('.map__pin--main');
 //  видимая часть карты
@@ -120,30 +118,26 @@ addDisabled(formFiltersFieldset, true);
 var noticeBlock = document.querySelector('.notice');
 // форма блока отправки обьявления
 var noticeBlockForm = noticeBlock.querySelector('.ad-form');
-//добаления атрабута ACTION
+//  добаления атрабута ACTION
 noticeBlockForm.action = 'https://js.dump.academy/keksobooking';
 //  форма адресса  блока отправки обьявления
 var noticeBlockFormAdress = noticeBlockForm.querySelector('#address');
-
-
-
-
 //  функция добавления атрибута Disabled в елемента массива
 function addDisabled(elementArray, bool) {
-  for (var i = 0; i < elementArray.length; i++) {
+  for (i = 0; i < elementArray.length; i++) {
     elementArray[i].disabled = bool;
   }
   return elementArray;
-};
+}
 //  добавляем всем филдсетам disabled=true
 addDisabled(formFieldset, true);
 //  событие при счелчке на pin
 mapPinMain.addEventListener('click', function () {
-  //убираем класс map--faded
+  //  убираем класс map--faded
   mapVision.classList.remove('map--faded');
   //  убираем у формы  ad-form--disabled
   formFieldAll.classList.remove('ad-form--disabled');
-  //изменяем всем филдсетам disabled=false
+  //  изменяем всем филдсетам disabled=false
   addDisabled(formFieldset, false);
   //  добавляем всем филдсетам disabled=false
   addDisabled(formFiltersFieldset, false);
@@ -157,8 +151,6 @@ mapPinMain.addEventListener('click', function () {
   var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 22;
   var mapPinCordinatX = mapPinMain.offsetLeft + mapPinMainWidth / 2;
   // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
-  noticeBlockFormAdress.value = mapPinCordinatX + "," + mapPinCordinatY;
+  noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
   mapPin.appendChild(fragment);
-
 });
-
