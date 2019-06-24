@@ -82,7 +82,6 @@ function generatePinArray(count) {
 //  создание финального массива с  8 обьектами для отрисовки елементов pin
 var similarAds = generatePinArray(8);
 
-
 //  3 часть задания
 var similarMapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
@@ -112,7 +111,7 @@ formFilters.classList.add('ad-form--disabled');
 //  находим все select формы фильтров
 var formFiltersFieldset = formFilters.querySelectorAll('select');
 //  добавляем всем филдсетам disabled=true
-addDisabled(formFiltersFieldset, true);
+chengeElementDisabledAtribute(formFiltersFieldset, true);
 
 //  форма отправки обьявления
 var noticeBlock = document.querySelector('.notice');
@@ -123,34 +122,211 @@ noticeBlockForm.action = 'https://js.dump.academy/keksobooking';
 //  форма адресса  блока отправки обьявления
 var noticeBlockFormAdress = noticeBlockForm.querySelector('#address');
 //  функция добавления атрибута Disabled в елемента массива
-function addDisabled(elementArray, bool) {
+function chengeElementDisabledAtribute(elementArray, bool) {
   for (i = 0; i < elementArray.length; i++) {
     elementArray[i].disabled = bool;
   }
   return elementArray;
 }
+
 //  добавляем всем филдсетам disabled=true
-addDisabled(formFieldset, true);
+chengeElementDisabledAtribute(formFieldset, true);
+
+//  высота mapPinMain
+var mapPinMainHeigth = mapPinMain.offsetHeight;
+//  ширина mapPinMain
+var mapPinMainWidth = mapPinMain.offsetWidth;
+//  кординаты pin*a на карте
+var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth / 2;
+var mapPinCordinatX = mapPinMain.offsetLeft + mapPinMainWidth / 2;
+// помещаемем координаты mapPinCordinats в noticeBlockFormAdress
+noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
+
+var appActive = false;
 //  событие при счелчке на pin
 mapPinMain.addEventListener('click', function () {
-  //  убираем класс map--faded
-  mapVision.classList.remove('map--faded');
-  //  убираем у формы  ad-form--disabled
-  formFieldAll.classList.remove('ad-form--disabled');
-  //  изменяем всем филдсетам disabled=false
-  addDisabled(formFieldset, false);
-  //  добавляем всем филдсетам disabled=false
-  addDisabled(formFiltersFieldset, false);
-  // разблокируем форму с фильтрами
-  formFilters.classList.remove('ad-form--disabled');
+  //  проверка на активность окна приложения
+  if (!appActive) {
+    //  убираем класс map--faded
+    mapVision.classList.remove('map--faded');
+    //  убираем у формы  ad-form--disabled
+    formFieldAll.classList.remove('ad-form--disabled');
+    //  изменяем всем филдсетам disabled=false
+    chengeElementDisabledAtribute(formFieldset, false);
+    //  добавляем всем филдсетам disabled=false
+    chengeElementDisabledAtribute(formFiltersFieldset, false);
+    // разблокируем форму с фильтрами
+    formFilters.classList.remove('ad-form--disabled');
+    mapPin.appendChild(fragment);
+    appActive = true;
+  }
 
-  //  вычисляем размеры mapPinMain
-  var mapPinMainWidth = mapPinMain.offsetWidth;
-  var mapPinMainHeigth = mapPinMain.offsetHeight;
   //  кординаты pin*a на карте
-  var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 22;
-  var mapPinCordinatX = mapPinMain.offsetLeft + mapPinMainWidth / 2;
+  mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 22;
+  mapPinCordinatX = mapPinMain.offsetLeft + mapPinMainWidth / 2;
   // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
   noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-  mapPin.appendChild(fragment);
+});
+
+//  5
+//  заголовок обьявления
+var noticeTitle = noticeBlock.querySelector('#title');
+//  добавляем арибуты
+noticeTitle.setAttribute('minlength', 30);
+noticeTitle.setAttribute('maxlength', 100);
+noticeTitle.setAttribute('required', true);
+
+
+//  цена за ночь обьявления
+var noticePrice = noticeBlock.querySelector('#price');
+noticePrice.setAttribute('type', 'number');
+noticePrice.max = 1000000;
+//  прописал минимальное значение,что б при первом открытии не уходило в минусовое значение
+noticePrice.min = 0;
+noticePrice.setAttribute('required', true);
+// тип жилья обьявления
+var noticeTypeOfHousing = noticeBlock.querySelector('#type');
+
+//  зависимость мин цены от выбора типа жилья цепляем на событие change
+noticeTypeOfHousing.addEventListener('change', function () {
+
+  switch (noticeTypeOfHousing.value) {
+    case 'bungalo':
+      noticePrice.min = '0';
+      noticePrice.placeholder = '0';
+      break;
+    case 'flat':
+      noticePrice.min = '1000';
+      noticePrice.placeholder = '1000';
+      break;
+    case 'house':
+      noticePrice.min = '5000';
+      noticePrice.placeholder = '5000';
+      break;
+    case 'palace':
+      noticePrice.min = '10000';
+      noticePrice.placeholder = '10000';
+      break;
+  }
+
+});
+
+//  адрес обьявления
+var noticeAdress = noticeBlock.querySelector('#address');
+//  добавление атрибута координатам обьявления
+noticeAdress.setAttribute('readonly', true);
+//  время заезда
+var noticeTineOfIncom = noticeBlock.querySelector('#timein');
+//  время выезда
+var noticeTineOfOutcom = noticeBlock.querySelector('#timeout');
+//  количество комнат
+var roomsNumber = noticeBlock.querySelector('#room_number');
+// количество гостей
+var capacityGests = noticeBlock.querySelector('#capacity');
+
+//  синхронизация полей Время заезда/время выезда
+noticeTineOfIncom.addEventListener('change', function () {
+
+  switch (noticeTineOfIncom.value) {
+    case '12:00':
+      noticeTineOfOutcom.value = '12:00';
+      break;
+    case '13:00':
+      noticeTineOfOutcom.value = '13:00';
+      break;
+    case '14:00':
+      noticeTineOfOutcom.value = '14:00';
+      break;
+  }
+});
+noticeTineOfOutcom.addEventListener('change', function () {
+
+  switch (noticeTineOfOutcom.value) {
+    case '12:00':
+      noticeTineOfIncom.value = '12:00';
+      break;
+    case '13:00':
+      noticeTineOfIncom.value = '13:00';
+      break;
+    case '14:00':
+      noticeTineOfIncom.value = '14:00';
+      break;
+  }
+});
+//  набросал как примерно будет выглядеть эта зависимость
+//  создаю дефолтное значение для КОЛИЧЕСТВО КОМНАТ
+
+var defaultOptionItem = document.createElement('option');
+defaultOptionItem.innerHTML = 'выберите значение';
+defaultOptionItem.disabled = true;
+defaultOptionItem.setAttribute('selected', true);
+
+//  создаю дефолтное значение длявыбоа количества мест
+var defaultOptionItemRooms = defaultOptionItem.cloneNode(true);
+capacityGests.appendChild(defaultOptionItemRooms);
+
+//  убрали атрибут первому елементу в списке
+capacityGests.children[0].removeAttribute('selected');
+//  Поле «Количество комнат» синхронизировано с полем «Количество мест»
+roomsNumber.addEventListener('change', function () {
+  switch (roomsNumber.value) {
+    case '1':
+      capacityGests.children[0].disabled = true;
+      capacityGests.children[1].disabled = true;
+      capacityGests.children[2].disabled = false;
+      capacityGests.children[3].disabled = true;
+      break;
+    case '2':
+      capacityGests.children[0].disabled = true;
+      capacityGests.children[1].disabled = false;
+      capacityGests.children[2].disabled = false;
+      capacityGests.children[3].disabled = true;
+      break;
+    case '3':
+      capacityGests.children[0].disabled = false;
+      capacityGests.children[1].disabled = false;
+      capacityGests.children[2].disabled = false;
+      capacityGests.children[3].disabled = true;
+      break;
+    case '100':
+      capacityGests.children[0].disabled = true;
+      capacityGests.children[1].disabled = true;
+      capacityGests.children[2].disabled = true;
+      capacityGests.children[3].disabled = false;
+      break;
+  }
+});
+//  создаю дефолтное значение длявыбоа количества комнат
+var defaultOptionItemGests = defaultOptionItem.cloneNode(true);
+roomsNumber.appendChild(defaultOptionItemGests);
+//  убрали атрибут первому елементу в списке
+roomsNumber.children[0].removeAttribute('selected');
+//  обратная зависимость форм «Количество комнат» с «Количество мест»
+capacityGests.addEventListener('change', function () {
+  switch (capacityGests.value) {
+    case '3':
+      roomsNumber.children[0].disabled = true;
+      roomsNumber.children[1].disabled = true;
+      roomsNumber.children[2].disabled = false;
+      roomsNumber.children[3].disabled = true;
+      break;
+    case '2':
+      roomsNumber.children[0].disabled = true;
+      roomsNumber.children[1].disabled = false;
+      roomsNumber.children[2].disabled = false;
+      roomsNumber.children[3].disabled = true;
+      break;
+    case '1':
+      roomsNumber.children[0].disabled = false;
+      roomsNumber.children[1].disabled = false;
+      roomsNumber.children[2].disabled = false;
+      roomsNumber.children[3].disabled = true;
+      break;
+    case '0':
+      roomsNumber.children[0].disabled = true;
+      roomsNumber.children[1].disabled = true;
+      roomsNumber.children[2].disabled = true;
+      roomsNumber.children[3].disabled = false;
+      break;
+  }
 });
