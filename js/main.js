@@ -325,6 +325,7 @@ function popupMove() {
 
     var dragged = false;
     //  событие перетаскивания
+
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
       dragged = true;
@@ -355,7 +356,10 @@ function popupMove() {
 
     };
     var onMouseUp = function (upEvt) {
+
       upEvt.preventDefault();
+      //  определнние координат на случай если жвижение попапа отсутствует и происходит только нажатие
+      noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
       if (!appActive) {
 
         //  убираем у формы  ad-form--disabled
