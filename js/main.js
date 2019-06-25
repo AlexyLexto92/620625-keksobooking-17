@@ -322,13 +322,10 @@ function popupMove() {
       x: evt.clientX,
       y: evt.clientY
     };
-
-    var dragged = false;
     //  событие перетаскивания
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      dragged = true;
       //  расстояние на которое пеетянули курсор
       var shift = {
         x: startCoordinats.x - moveEvt.clientX,
@@ -373,17 +370,9 @@ function popupMove() {
         mapPin.appendChild(fragment);
         appActive = true;
       }
-
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      if (dragged) {
-        var onClickPreventDefault = function (evtO) {
-          evtO.preventDefault();
-          mapPinMain.removeEventListener('click', onClickPreventDefault);
-        };
-        mapPinMain.addEventListener('click', onClickPreventDefault);
-      }
     };
     //  обработчики события передвижения мыши и отпускания кнопки мыши
     document.addEventListener('mousemove', onMouseMove);
