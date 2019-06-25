@@ -132,42 +132,6 @@ function chengeElementDisabledAtribute(elementArray, bool) {
 //  добавляем всем филдсетам disabled=true
 chengeElementDisabledAtribute(formFieldset, true);
 
-//  высота mapPinMain
-var mapPinMainHeigth = mapPinMain.offsetHeight;
-//  ширина mapPinMain
-var mapPinMainWidth = mapPinMain.offsetWidth;
-//  кординаты pin*a на карте
-var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth / 2;
-var mapPinCordinatX = mapPinMain.offsetLeft + mapPinMainWidth / 2;
-// помещаемем координаты mapPinCordinats в noticeBlockFormAdress
-noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-
-var appActive = false;
-//  событие при счелчке на pin
-mapPinMain.addEventListener('click', function () {
-  //  проверка на активность окна приложения
-  if (!appActive) {
-    //  убираем класс map--faded
-    mapVision.classList.remove('map--faded');
-    //  убираем у формы  ad-form--disabled
-    formFieldAll.classList.remove('ad-form--disabled');
-    //  изменяем всем филдсетам disabled=false
-    chengeElementDisabledAtribute(formFieldset, false);
-    //  добавляем всем филдсетам disabled=false
-    chengeElementDisabledAtribute(formFiltersFieldset, false);
-    // разблокируем форму с фильтрами
-    formFilters.classList.remove('ad-form--disabled');
-    mapPin.appendChild(fragment);
-    appActive = true;
-  }
-
-  //  кординаты pin*a на карте
-  mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 22;
-  mapPinCordinatX = mapPinMain.offsetLeft + mapPinMainWidth / 2;
-  // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
-  noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-});
-
 //  5
 //  заголовок обьявления
 var noticeTitle = noticeBlock.querySelector('#title');
@@ -208,7 +172,6 @@ noticeTypeOfHousing.addEventListener('change', function () {
       noticePrice.placeholder = '10000';
       break;
   }
-
 });
 
 //  адрес обьявления
@@ -330,3 +293,98 @@ capacityGests.addEventListener('change', function () {
       break;
   }
 });
+
+//  высота mapPinMain
+var mapPinMainHeigth = mapPinMain.offsetHeight;
+//  ширина mapPinMain
+var mapPinMainWidth = mapPinMain.offsetWidth;
+//  кординаты pin*a на карте
+var mapPinCordinatY = mapPinMain.offsetTop + Math.floor(mapPinMainHeigth / 2);
+var mapPinCordinatX = mapPinMain.offsetLeft + Math.floor((mapPinMainWidth / 2));
+// помещаемем координаты mapPinCordinats в noticeBlockFormAdress
+noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
+
+//  реализация перетаскивания пина по карте
+
+//  сcылка на елемент для захвата
+var appActive = false;
+
+function popupMove() {
+  //  событие захвата
+  mapPinMain.addEventListener('mousedown', function (evt) {
+    //  убираем класс map--faded
+    mapVision.classList.remove('map--faded');
+    evt.preventDefault();
+
+    //  координаты точки с которой мы начали перемещать попап
+
+    var startCoordinats = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var dragged = false;
+    //  событие перетаскивания
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      dragged = true;
+      //  расстояние на которое пеетянули курсор
+      var shift = {
+        x: startCoordinats.x - moveEvt.clientX,
+        y: startCoordinats.y - moveEvt.clientY
+      };
+
+      startCoordinats = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+      //  прописываем условие ограничений
+      var positionPinY = mapPinMain.offsetTop - shift.y;
+      if (positionPinY >= 130 - mapPinMainHeigth - 15 && positionPinY <= 630 - mapPinMainHeigth - 15) {
+        mapPinMain.style.top = positionPinY + 'px';
+      }
+      var positionPinX = mapPinMain.offsetLeft - shift.x;
+      if (positionPinX >= Math.floor((mapPinMainWidth / 2)) * (-1) && positionPinX <= mapPinWidth + (Math.floor(mapPinMainWidth / 2)) * (-1)) {
+        mapPinMain.style.left = positionPinX + 'px';
+      }
+      //  новые кординаты pin*a на карте
+      mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 15;
+      mapPinCordinatX = mapPinMain.offsetLeft + Math.floor((mapPinMainWidth / 2));
+      // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
+      noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
+
+    };
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      if (!appActive) {
+
+        //  убираем у формы  ad-form--disabled
+        formFieldAll.classList.remove('ad-form--disabled');
+        //  изменяем всем филдсетам disabled=false
+        chengeElementDisabledAtribute(formFieldset, false);
+        //  добавляем всем филдсетам disabled=false
+        chengeElementDisabledAtribute(formFiltersFieldset, false);
+        // разблокируем форму с фильтрами
+        formFilters.classList.remove('ad-form--disabled');
+        mapPin.appendChild(fragment);
+        appActive = true;
+      }
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      if (dragged) {
+        var onClickPreventDefault = function (evtO) {
+          evtO.preventDefault();
+          mapPinMain.removeEventListener('click', onClickPreventDefault);
+        };
+        mapPinMain.addEventListener('click', onClickPreventDefault);
+      }
+    };
+    //  обработчики события передвижения мыши и отпускания кнопки мыши
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+  });
+}
+popupMove();
