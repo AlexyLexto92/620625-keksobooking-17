@@ -1,5 +1,8 @@
 'use strict';
 
+//   МОДУЛЬ СОЗДАНИЯ ДАННЫХ
+
+/*
 var mapVision = document.querySelector('.map');
 //  mapVision.classList.remove('map--faded');
 var mapPin = document.querySelector('.map__pins');
@@ -81,8 +84,12 @@ function generatePinArray(count) {
 }
 //  создание финального массива с  8 обьектами для отрисовки елементов pin
 var similarAds = generatePinArray(8);
+*/
 
-//  3 часть задания
+
+// МОДУЛЬ ОТРИСОВКИ ПИНОВ
+/*
+
 var similarMapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 var createPin = function (properties) {
@@ -97,7 +104,11 @@ var fragment = document.createDocumentFragment();
 for (var i = 0; i < similarAds.length; i++) {
   fragment.appendChild(createPin(similarAds[i]));
 }
+*/
 
+//  МОДУЛЬ ФОРМЫ
+
+/*
 //  большая метка нанеактивной карте
 var mapPinMain = document.querySelector('.map__pin--main');
 //  видимая часть карты
@@ -293,6 +304,10 @@ capacityGests.addEventListener('change', function () {
       break;
   }
 });
+*/
+
+//               Модуль ПЕРЕТАСКИВАНИЯ ПОЛЬЩОВАТЕЛЬСКОГО ПИНА И ОТРИСОВКИ ПИНОВ НА КАРТЕ
+/*
 
 //  высота mapPinMain
 var mapPinMainHeigth = mapPinMain.offsetHeight;
@@ -381,3 +396,4 @@ function popupMove() {
   });
 }
 popupMove();
+*/
