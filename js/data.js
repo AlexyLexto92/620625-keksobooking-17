@@ -3,12 +3,8 @@
 //   МОДУЛЬ СОЗДАНИЯ ДАННЫХ
 (function () {
 
-  window.mapVision = document.querySelector('.map');
-  window.mapPin = document.querySelector('.map__pins');
-  window.mapPinWidth = window.mapPin.offsetWidth; //  ширина окна
-  var pin = document.querySelector('.map__pin');
-  window.pinWidth = pin.offsetWidth; // ширина пина
-  window.pinHeight = pin.offsetHeight; //  высота пина
+  var mapPin = document.querySelector('.map__pins');
+  var mapPinWidth = mapPin.offsetWidth; //  ширина окна
 
   //  тип квартиры
   var typeArray = ['palace', 'flat', 'house', 'bungalo'];
@@ -19,12 +15,7 @@
     var newArr = [];
     for (var i = 1; i <= count; i++) {
       //  условие по которому мы будем записывать числа в src если число > 10
-      if (i < 10 || i > 0) {
-        var s = '0' + i;
-      } else {
-        //  если i >=10 то "0" перед числом не ставиться
-        s = i;
-      }
+      var s = (i < 10) ? ('0' + i) : i;
       newArr.push('img/avatars/user' + s + '.png');
     }
     return newArr;
@@ -52,7 +43,7 @@
     var arr = [];
     for (var i = 1; i <= count; i++) {
       arr.push({
-        x: Math.round(0 + Math.random() * (window.mapPinWidth - 0)),
+        x: Math.round(0 + Math.random() * (mapPinWidth - 0)),
         y: Math.round(min + Math.random() * (max - min))
       });
     }

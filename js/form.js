@@ -4,18 +4,14 @@
 
 (function () {
 
-  //  большая метка нанеактивной карте
-  window.mapPinMain = document.querySelector('.map__pin--main');
-  //  видимая часть карты
-
-  window.formFieldAll = document.querySelector('.ad-form');
+  var formFieldAll = document.querySelector('.ad-form');
   // находим все fieldset формы обьявления
-  window.formFieldset = window.formFieldAll.querySelectorAll('fieldset');
+  var formFieldset = formFieldAll.querySelectorAll('fieldset');
   //  форма фильтры
-  window.formFilters = document.querySelector('.map__filters');
-  window.formFilters.classList.add('ad-form--disabled');
+  var formFilters = document.querySelector('.map__filters');
+  formFilters.classList.add('ad-form--disabled');
   //  находим все select формы фильтров
-  window.formFiltersFieldset = window.formFilters.querySelectorAll('select');
+  var formFiltersFieldset = formFilters.querySelectorAll('select');
 
   //  форма отправки обьявления
   var noticeBlock = document.querySelector('.notice');
@@ -23,13 +19,12 @@
   var noticeBlockForm = noticeBlock.querySelector('.ad-form');
   //  добаления атрабута ACTION
   noticeBlockForm.action = 'https://js.dump.academy/keksobooking';
-  //  форма адресса  блока отправки обьявления
-  window.noticeBlockFormAdress = noticeBlockForm.querySelector('#address');
+
 
   //  добавляем всем филдсетам disabled=true
-  window.chengeElementDisabledAtribute(window.formFiltersFieldset, true);
+  window.changeElementDisabledAtribute(formFiltersFieldset, true);
   //  добавляем всем филдсетам disabled=true
-  window.chengeElementDisabledAtribute(window.formFieldset, true);
+  window.changeElementDisabledAtribute(formFieldset, true);
 
   //  5
   //  заголовок обьявления
