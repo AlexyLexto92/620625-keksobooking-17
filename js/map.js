@@ -6,7 +6,6 @@
 (function () {
   var mapPin = document.querySelector('.map__pins');
   var mapPinWidth = mapPin.offsetWidth; //  ширина окна
-  var mapPin = document.querySelector('.map__pins');
   //  большая метка нанеактивной карте
   var mapPinMain = document.querySelector('.map__pin--main');
 
