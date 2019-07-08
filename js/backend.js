@@ -52,6 +52,10 @@
     xhr.addEventListener('error', function () {
       onEror('Произошла ошибка соединения');
     });
+    xhr.addEventListener('timeout', function () {
+      onEror('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
 
 
     xhr.open('POST', UPLOAD_URL);
@@ -70,7 +74,7 @@
   //  событие нажатия на кнопку отправки формы
   formBlock.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.upload(new FormData(formBlock), createSuccess, window.createEror);
+    window.backend.upload(new FormData(formBlock), createSuccess, createEror);
   });
 
   //  реализация окна успешной отправки формы
@@ -103,8 +107,6 @@
   window.createEror = function (message) {
     errorMessage.textContent = message;
     errorParent.appendChild(errorContainer);
-
-
     //  обработчик события на кнопку ESC для окна ошибки получения данных
     var listenerError = function (evt) {
       if (evt.keyCode === 27) {
@@ -112,7 +114,7 @@
         document.removeEventListener('keydown', listenerError);
       }
     };
-    //  закрытие окна успешной отправки формы
+    //  закрытие окна ошибки отправки формы
     document.addEventListener('keydown', listenerError);
   };
 
