@@ -41,7 +41,6 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      debugger
       if (xhr.status === STATUS_GOOD) {
         onSuccess(xhr.response);
         //  ошибка
@@ -56,8 +55,6 @@
       onEror('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-
-
     xhr.open('POST', UPLOAD_URL);
     xhr.send(data);
   };
@@ -66,16 +63,6 @@
     load: load,
     upload: upload
   };
-
-
-  var noticeBlock = document.querySelector('.notice');
-  //  форма ввода
-  var formBlock = noticeBlock.querySelector('.ad-form');
-  //  событие нажатия на кнопку отправки формы
-  formBlock.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    window.backend.upload(new FormData(formBlock), createSuccess, createEror);
-  });
 
   //  реализация окна успешной отправки формы
   var successParent = document.querySelector('main');
@@ -117,8 +104,14 @@
     //  закрытие окна ошибки отправки формы
     document.addEventListener('keydown', listenerError);
   };
-
-
+  var noticeBlock = document.querySelector('.notice');
+  //  форма ввода
+  var formBlock = noticeBlock.querySelector('.ad-form');
+  //  событие нажатия на кнопку отправки формы
+  formBlock.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.upload(new FormData(formBlock), createSuccess, window.createEror);
+  });
 
   //  функция заполнения массива данными из сервера
   window.createDataPin = function (apartmentServerSideData) {
@@ -134,11 +127,6 @@
     mapPin.appendChild(window.pinsFragment);
   };
 
-
-
-
-
-
   var errorButton = errorContainer.querySelector('.error__button');
   //  событие нажатия кнопки Еще раз для запроса данных с сервера
   errorButton.addEventListener('click', function (evt) {
@@ -149,6 +137,4 @@
 
     errorParent.removeChild(errorContainer);
   });
-
-
 })();
