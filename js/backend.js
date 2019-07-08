@@ -36,13 +36,24 @@
   };
 
   //  функция загрузки данных на сервер сформы
-  var upload = function (data, onSuccess) {
+  var upload = function (data, onSuccess, onEror) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      onSuccess(xhr.response);
+      debugger
+      if (xhr.status === STATUS_GOOD) {
+        onSuccess(xhr.response);
+        //  ошибка
+      } else {
+        createEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
     });
+      xhr.addEventListener('error', function () {
+        createEror('Произошла ошибка соединения');
+      });
+
+
     xhr.open('POST', UPLOAD_URL);
     xhr.send(data);
   };
@@ -58,7 +69,7 @@
   var formBlock = noticeBlock.querySelector('.ad-form');
   formBlock.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.upload(new FormData(formBlock), createSuccess);
+    window.backend.upload(new FormData(formBlock), createSuccess,window.createEror);
   });
 
   //  реализация окна успешной отправки формы
@@ -99,6 +110,8 @@
     .content.querySelector('.error').cloneNode(true);
   var errorMessage = errorContainer.querySelector('.error__message');
   var mapPin = document.querySelector('.map__pins');
+
+
   window.createEror = function (message) {
     errorMessage.textContent = message;
     errorParent.appendChild(errorContainer);
@@ -115,6 +128,9 @@
     document.addEventListener('keydown', listenerError);
   };
 
+
+
+
   var errorButton = errorContainer.querySelector('.error__button');
   //  событие нажатия кнопки Еще раз
   errorButton.addEventListener('click', function (evt) {
@@ -123,6 +139,8 @@
     window.backend.load(window.createDataPin, window.createEror);
     //  закрытие окна
     errorParent.removeChild(errorContainer);
+
+
   });
 
 })();
