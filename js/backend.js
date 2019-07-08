@@ -46,12 +46,12 @@
         onSuccess(xhr.response);
         //  ошибка
       } else {
-        createEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        onEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
-      xhr.addEventListener('error', function () {
-        createEror('Произошла ошибка соединения');
-      });
+    xhr.addEventListener('error', function () {
+      onEror('Произошла ошибка соединения');
+    });
 
 
     xhr.open('POST', UPLOAD_URL);
@@ -67,15 +67,17 @@
   var noticeBlock = document.querySelector('.notice');
   //  форма ввода
   var formBlock = noticeBlock.querySelector('.ad-form');
+  //  событие нажатия на кнопку отправки формы
   formBlock.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.upload(new FormData(formBlock), createSuccess,window.createEror);
+    window.backend.upload(new FormData(formBlock), createSuccess, window.createEror);
   });
 
   //  реализация окна успешной отправки формы
   var successParent = document.querySelector('main');
   var successContainer = document.querySelector('#success')
     .content.querySelector('.success').cloneNode(true);
+
 
   var createSuccess = function () {
     successParent.appendChild(successContainer);
@@ -90,19 +92,6 @@
     //  закрытие окна успешной отправки формы
     document.addEventListener('keydown', listener);
   };
-  //  функция заполнения массива данными из сервера
-  window.createDataPin = function (apartmentServerSideData) {
-    //  создали пустой массив для данных с сервера
-    window.apartmentsList = [];
-    for (var i = 0; i < apartmentServerSideData.length; i++) {
-      var apartment = apartmentServerSideData[i];
-      window.apartmentsList.push(apartment);
-    }
-
-    window.pinsFragment = window.createPinsFragment(window.apartmentsList);
-    //  функция отображения пинов после загрузки карты
-    mapPin.appendChild(window.pinsFragment);
-  };
 
   //  сценарий ошибки загрузки данных
   var errorParent = document.querySelector('main');
@@ -110,7 +99,6 @@
     .content.querySelector('.error').cloneNode(true);
   var errorMessage = errorContainer.querySelector('.error__message');
   var mapPin = document.querySelector('.map__pins');
-
 
   window.createEror = function (message) {
     errorMessage.textContent = message;
@@ -130,17 +118,35 @@
 
 
 
+  //  функция заполнения массива данными из сервера
+  window.createDataPin = function (apartmentServerSideData) {
+    //  создали пустой массив для данных с сервера
+    window.apartmentsList = [];
+    for (var i = 0; i < apartmentServerSideData.length; i++) {
+      var apartment = apartmentServerSideData[i];
+      window.apartmentsList.push(apartment);
+    }
+
+    window.pinsFragment = window.createPinsFragment(window.apartmentsList);
+    //  функция отображения пинов после загрузки карты
+    mapPin.appendChild(window.pinsFragment);
+  };
+
+
+
+
+
 
   var errorButton = errorContainer.querySelector('.error__button');
-  //  событие нажатия кнопки Еще раз
+  //  событие нажатия кнопки Еще раз для запроса данных с сервера
   errorButton.addEventListener('click', function (evt) {
     evt.preventDefault();
     //  повторный запрос данных
     window.backend.load(window.createDataPin, window.createEror);
     //  закрытие окна
+
     errorParent.removeChild(errorContainer);
-
-
   });
+
 
 })();
