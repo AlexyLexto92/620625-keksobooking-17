@@ -50,18 +50,29 @@
     PinElement.querySelector('img').setAttribute('alt', 'Некий альтернативній текст');
     return PinElement;
   };
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < window.similarAds.length; i++) {
-    fragment.appendChild(createPin(window.similarAds[i]));
-  }
+
+
+  window.createPinsFragment = function (pinsArray) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < pinsArray.length; i++) {
+      fragment.appendChild(createPin(pinsArray[i]));
+    }
+    return fragment;
+  };
 
   //  реализация перетаскивания пина по карте
   //  сcылка на елемент для захвата
   var appActive = false;
+  var dataLoad = false;
 
 
   //  событие захвата
   mapPinMain.addEventListener('mousedown', function (evt) {
+    //  реализация только одной загрузки данных без повторения при повторном нажатии на клик
+    if (!dataLoad) {
+      window.backend.load(window.createDataPin, window.createEror);
+      dataLoad = true;
+    }
     //  убираем класс map--faded
     mapVision.classList.remove('map--faded');
     evt.preventDefault();
@@ -82,12 +93,7 @@
         x: startCoordinats.x - moveEvt.clientX,
         y: startCoordinats.y - moveEvt.clientY
       };
-      /*
-      startCoordinats = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-      };
-      */
+
 
       startCoordinats = {
         x: Math.min(Math.max(moveEvt.clientX, mapVision.offsetLeft), mapVision.offsetWidth + mapVision.offsetLeft),
@@ -124,7 +130,7 @@
         window.changeElementDisabledAtribute(formFiltersFieldset, false);
         // разблокируем форму с фильтрами
         formFilters.classList.remove('ad-form--disabled');
-        mapPin.appendChild(fragment);
+
         appActive = true;
       }
       document.removeEventListener('mousemove', onMouseMove);

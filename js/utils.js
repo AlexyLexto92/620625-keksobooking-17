@@ -6,4 +6,5 @@
       elementArray[i].disabled = bool;
     }
   };
+
 })();
