@@ -20,8 +20,6 @@
   //  добаления атрабута ACTION
   noticeBlockForm.action = 'https://js.dump.academy/keksobooking';
 
-
-
   //  добавляем всем филдсетам disabled=true
   window.changeElementDisabledAtribute(formFiltersFieldset, true);
   //  добавляем всем филдсетам disabled=true
@@ -122,7 +120,7 @@
 
   //  фильтр стоимости
   var PriceOfHousing = formFilters.querySelector('#housing-price');
-  var PriceOfHousingfilter = function (elem) {
+  var priceOfHousingfilter = function (elem) {
     if (PriceOfHousing.value === 'any') {
       return true;
     } else if (PriceOfHousing === 'low') {
@@ -131,9 +129,11 @@
       return elem.offer.price >= 50000;
     } else if (PriceOfHousing === 'middle') {
       return elem.offer.price >= 10000 && elem.offer.price <= 50000;
-    } else
+    } else {
       return false;
+    }
   };
+
   //  фильтрация по количеству комнат
   var numOfRums = formFilters.querySelector('#housing-rooms');
   var numOfRumsFilter = function (elem) {
@@ -167,35 +167,37 @@
     }
     return filtered;
   };
+
   //  общий фильтр
   window.commonFilter = function (elem) {
-    return typeOfHousingFilter(elem) && PriceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
+    return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
   };
-  debugger
+
   window.commonFilter(window.apartmentsList);
-  console.log(window.commonFilter(window.apartmentsList));
-//  очистка карты от уже прорисованых  пинов
+  //  очистка карты от уже прорисованых  пинов
+  debugger
   var clearAllOfPins = function () {
     mapPin.removeChild(window.pinsFragment);
-  }
+  };
+  console.log(window.pinsFragment);
 
-//  делаеи выборку всех нажимаемых изменяемых елементов фильтров
-  var pinFiltersFields = formFilters.querySelectorAll('.map__filter , .map__features');
-  //  для каждого елемента массива ставим слушатель
-  pinFiltersFields.forEach(function(elem){
-    console.log(elem);
-elem.addEventListener('change', onChangePinFiltersFields);
-  })
 
 
 
   var onChangePinFiltersFields = function () {
+    debugger
     clearAllOfPins();
     //  window.apartamentsList.filter(commonFilter).slice(0, 5);
-    window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
+    window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(window.commonFilter).slice(0, 5));
     //  функция отображения пинов после загрузки карты
-     mapPin.appendChild(window.pinsFragment);
-console.log(pinsFragment);
+    mapPin.appendChild(window.pinsFragment);
   };
+  debugger
+  //  делаеи выборку всех нажимаемых изменяемых елементов фильтров
+  var pinFiltersFields = formFilters.querySelectorAll('.map__filter , .map__features');
+  //  для каждого елемента массива ставим слушатель
+  pinFiltersFields.forEach(function (elem) {
+    elem.addEventListener('change', onChangePinFiltersFields);
+  });
 
 })();
