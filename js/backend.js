@@ -122,9 +122,27 @@
       window.apartmentsList.push(apartment);
     }
 
-    window.pinsFragment = window.createPinsFragment(window.apartmentsList);
+    //   !!!!-----ЗАДАНИЕ 7-------!!!!
+    //  сортировка ейтса ,на вход берет массив array
+    function sortArray(array) {
+      for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+      //  по логике этого  сортировщика он выводит входящий массив
+      return array;
+    };
+    //  Создал новый массив
+    window.apartmentsListSlice =[];
+        //  Сортируем исходный массив в рандомном порядке и записываем его в новый массив
+    window.apartmentsListSlice = sortArray(window.apartmentsList).slice(0, 5);
+    //  задал аргументом новый массив
+    window.pinsFragment = window.createPinsFragment(window.apartmentsListSlice);
     //  функция отображения пинов после загрузки карты
     mapPin.appendChild(window.pinsFragment);
+
   };
 
   var errorButton = errorContainer.querySelector('.error__button');
