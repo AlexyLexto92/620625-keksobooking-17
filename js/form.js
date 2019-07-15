@@ -173,14 +173,9 @@
   }
 
   var onChangePinFiltersFields = function () {
-
-    window.apartmentsList.filter(commonFilter).slice(0, 5).forEach(function (elem) {
-      window.pinsFragment = window.createPinsFragment(elem);
-
-      //  функция отображения пинов
-      mapPin.appendChild(window.pinsFragment);
-    });
-
+    window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
+    //  функция отображения пинов
+    mapPin.appendChild(window.pinsFragment);
 
   };
   //  для каждого елемента массива ставим слушатель
