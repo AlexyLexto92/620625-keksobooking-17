@@ -48,6 +48,7 @@
     PinElement.style.left = properties.location.x - pinWidth / 2 + 'px';
     PinElement.querySelector('img').setAttribute('src', properties.author.avatar);
     PinElement.querySelector('img').setAttribute('alt', 'Некий альтернативній текст');
+    PinElement.classList.add('new-pin');
     return PinElement;
   };
 

@@ -166,13 +166,21 @@
     }
     return filtered;
   }
-
+  //  удаление пинов
+  function clearAllPins() {
+    var newPins = mapPin.querySelectorAll('.new-pin');
+    newPins.forEach(function (Element) {
+      mapPin.removeChild(Element);
+    });
+  }
   //  общий фильтр
   function commonFilter(elem) {
     return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
   }
 
   var onChangePinFiltersFields = function () {
+    //  удаление пинов
+    clearAllPins();
     window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
     //  функция отображения пинов
     mapPin.appendChild(window.pinsFragment);
