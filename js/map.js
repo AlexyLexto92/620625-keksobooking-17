@@ -86,6 +86,7 @@
     //  событие перетаскивания
 
     var onMouseMove = function (moveEvt) {
+
       moveEvt.preventDefault();
 
       //  расстояние на которое пеетянули курсор

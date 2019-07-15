@@ -175,24 +175,19 @@
 
   window.commonFilter(window.apartmentsList);
   //  очистка карты от уже прорисованых  пинов
-  debugger
+
   var clearAllOfPins = function () {
     mapPin.removeChild(window.pinsFragment);
   };
-  console.log(window.pinsFragment);
-
-
-
 
   var onChangePinFiltersFields = function () {
-    debugger
     clearAllOfPins();
     //  window.apartamentsList.filter(commonFilter).slice(0, 5);
     window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(window.commonFilter).slice(0, 5));
     //  функция отображения пинов после загрузки карты
     mapPin.appendChild(window.pinsFragment);
   };
-  debugger
+
   //  делаеи выборку всех нажимаемых изменяемых елементов фильтров
   var pinFiltersFields = formFilters.querySelectorAll('.map__filter , .map__features');
   //  для каждого елемента массива ставим слушатель
