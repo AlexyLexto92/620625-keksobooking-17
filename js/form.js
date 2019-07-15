@@ -106,26 +106,22 @@
         break;
     }
   });
-  var onChangePinFiltersFields = function () {
-
-    window.apartmentsList.forEach(function(elem){
-
-
 
   //  Создание фильтров
   var housingType = formFilters.querySelector('#housing-type');
 
   //  фильтр типа жилья
-  function typeOfHousingFilter (elem) {
+  function typeOfHousingFilter(elem) {
     if (housingType.value === 'any') {
       return true;
     }
     return elem.offer.type === housingType.value;
-  };
+  }
 
   //  фильтр стоимости
   var PriceOfHousing = formFilters.querySelector('#housing-price');
-  function  priceOfHousingfilter (elem) {
+
+  function priceOfHousingfilter(elem) {
     if (PriceOfHousing.value === 'any') {
       return true;
     } else if (PriceOfHousing === 'low') {
@@ -135,28 +131,30 @@
     } else if (PriceOfHousing === 'middle') {
       return true;
     }
-      return false;
-  };
+    return false;
+  }
 
   //  фильтрация по количеству комнат
   var numOfRums = formFilters.querySelector('#housing-rooms');
-  function numOfRumsFilter (elem) {
+
+  function numOfRumsFilter(elem) {
     if (numOfRums.value === 'any') {
       return true;
     }
     return elem.offer.rooms === Number(numOfRums.value);
-  };
+  }
   //  фильтрация по количеству гостей
   var numOfGuests = formFilters.querySelector('#housing-guests');
+
   function numOfGuestsFilter(elem) {
     if (numOfGuests.value === 'any') {
       return true;
     }
     return elem.offer.guests === Number(numOfGuests.value);
-  };
+  }
 
   //  фильтрация по чекбоксам
-  function featuresFilter (elem) {
+  function featuresFilter(elem) {
     var filterFeaturesCheckboxes = document.querySelectorAll('.map__features input[type=checkbox]:checked');
     var filtered = true;
     if (filterFeaturesCheckboxes.length) {
@@ -167,28 +165,25 @@
       });
     }
     return filtered;
-  };
+  }
 
   //  общий фильтр
-  function commonFilter (elem) {
+  function commonFilter(elem) {
     return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
+  }
+
+  var onChangePinFiltersFields = function () {
+
+    window.apartmentsList.filter(commonFilter).slice(0, 5).forEach(function (elem) {
+      window.pinsFragment = window.createPinsFragment(elem);
+
+      //  функция отображения пинов
+      mapPin.appendChild(window.pinsFragment);
+    });
+
+
   };
+  //  для каждого елемента массива ставим слушатель
 
-
-  //  очистка карты от уже прорисованых  пинов
-/*
-  var clearAllOfPins = function () {
-    mapPin.removeChild(window.pinsFragment);
-  };
-*/
-
-   //  clearAllOfPins();
-    window.pinsFragment = window.createPinsFragment (window.apartmentsList.filter(commonFilter));
-  });
-    //  функция отображения пинов
-    mapPin.appendChild(window.pinsFragment);
-  };
-//  для каждого елемента массива ставим слушатель
-
-    formFilters.addEventListener('change', onChangePinFiltersFields);
+  formFilters.addEventListener('change', onChangePinFiltersFields);
 })();
