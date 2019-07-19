@@ -144,6 +144,14 @@
     //  функция отображения пинов после загрузки карты
     mapPin.appendChild(window.pinsFragment);
 
+
+    //  краточки
+    var newPins = document.querySelectorAll('.new-pin');
+    //  нажатие на пин
+    Array.from(newPins).forEach(function (elem) {
+      elem.addEventListener('click', window.onMapPinClick);
+    });
+
   };
 
   var errorButton = errorContainer.querySelector('.error__button');
