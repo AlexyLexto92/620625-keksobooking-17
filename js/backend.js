@@ -145,9 +145,9 @@
     mapPin.appendChild(window.pinsFragment);
 
 
-    //  краточки
+    //  набор пинов
     var newPins = document.querySelectorAll('.new-pin');
-    //  нажатие на пин
+    //  нажатие на любой из пинов
     Array.from(newPins).forEach(function (elem) {
       elem.addEventListener('click', window.onMapPinClick);
     });

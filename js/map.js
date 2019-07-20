@@ -40,7 +40,6 @@
 
 
   // отрисовка пинов
-
   var similarMapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var createPin = function (properties) {
     var PinElement = similarMapPinTemplate.cloneNode(true);
@@ -56,7 +55,6 @@
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pinsArray.length; i++) {
       fragment.appendChild(createPin(pinsArray[i]));
-      //  отображение карточек после отображения пинов
     }
     return fragment;
   };
