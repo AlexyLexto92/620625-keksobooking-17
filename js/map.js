@@ -40,18 +40,16 @@
 
 
   // отрисовка пинов
-
   var similarMapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var createPin = function (properties) {
     var PinElement = similarMapPinTemplate.cloneNode(true);
     PinElement.style.top = properties.location.y - pinHeight + 'px';
     PinElement.style.left = properties.location.x - pinWidth / 2 + 'px';
     PinElement.querySelector('img').setAttribute('src', properties.author.avatar);
-    PinElement.querySelector('img').setAttribute('alt', 'Некий альтернативній текст');
+    PinElement.querySelector('img').setAttribute('alt', properties.offer.title);
     PinElement.classList.add('new-pin');
     return PinElement;
   };
-
 
   window.createPinsFragment = function (pinsArray) {
     var fragment = document.createDocumentFragment();
