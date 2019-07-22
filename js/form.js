@@ -189,4 +189,45 @@
   //  для каждого елемента массива ставим слушатель
 
   formFilters.addEventListener('change', onChangePinFiltersFields);
+
+  //  валидация формы количества гостей и кол-ва комнат
+  var inputRoomNumber = document.querySelector('#room_number');
+  var inputCapacity = document.querySelector('#capacity');
+  var inputCapacityOptions = inputCapacity.querySelectorAll('option');
+  //  непосредственно функция валидации
+  var inputRoomNumberValidation = function () {
+    //  удаляем все option из select
+    inputCapacityOptions.forEach(function (elem) {
+      elem.remove();
+    });
+    //  функция добавления option[elem] в select(берем индексы подходящих значений кол-а гостей и вставляем в select)
+    var insertInputCapacityOptions = function (elements) {
+      elements.forEach(function (elem) {
+        inputCapacity.appendChild(inputCapacityOptions[elem]);
+      });
+    };
+    switch (inputRoomNumber.selectedIndex) {
+      case 0:
+        insertInputCapacityOptions([2]);
+        break;
+      case 1:
+        insertInputCapacityOptions([1, 2]);
+        break;
+      case 2:
+        insertInputCapacityOptions([0, 1, 2]);
+        break;
+      case 3:
+        insertInputCapacityOptions([3]);
+        break;
+    }
+  };
+  //  сразу запускаем функцию для первой коректной связи между полями до изменения поля количества комнат
+  inputRoomNumberValidation();
+
+  var changeinputRoomNumber = function () {
+    inputRoomNumberValidation();
+  };
+  //  обработчик события изменения количества комнат
+  inputRoomNumber.addEventListener('change', changeinputRoomNumber);
+
 })();
