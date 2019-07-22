@@ -64,26 +64,7 @@
     upload: upload
   };
 
-  //  реализация окна успешной отправки формы
-  var successParent = document.querySelector('main');
-  var successContainer = document.querySelector('#success')
-    .content.querySelector('.success').cloneNode(true);
-
-
-  var createSuccess = function () {
-    successParent.appendChild(successContainer);
-
-    //  обработчик события на кнопку ESC для окна успешной отправки формы
-    var listener = function (evt) {
-      if (evt.keyCode === 27) {
-        successParent.removeChild(successContainer);
-        document.removeEventListener('keydown', listener);
-      }
-    };
-    //  закрытие окна успешной отправки формы
-    document.addEventListener('keydown', listener);
-  };
-
+  /*  ЗАГРУЗКА ДАННЫХ*/
   //  сценарий ошибки загрузки данных
   var errorParent = document.querySelector('main');
   var errorContainer = document.querySelector('#error')
@@ -98,20 +79,12 @@
     var listenerError = function (evt) {
       if (evt.keyCode === 27) {
         errorParent.removeChild(errorContainer);
-        document.removeEventListener('keydown', listenerError);
       }
+      document.removeEventListener('keydown', listenerError);
     };
     //  закрытие окна ошибки отправки формы
     document.addEventListener('keydown', listenerError);
   };
-  var noticeBlock = document.querySelector('.notice');
-  //  форма ввода
-  var formBlock = noticeBlock.querySelector('.ad-form');
-  //  событие нажатия на кнопку отправки формы
-  formBlock.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    window.backend.upload(new FormData(formBlock), createSuccess, window.createEror);
-  });
 
   //  функция заполнения массива данными из сервера
   window.createDataPin = function (apartmentServerSideData) {
@@ -144,14 +117,12 @@
     //  функция отображения пинов после загрузки карты
     mapPin.appendChild(window.pinsFragment);
 
-
     //  набор пинов
     var newPins = document.querySelectorAll('.new-pin');
     //  нажатие на любой из пинов
     Array.from(newPins).forEach(function (elem) {
       elem.addEventListener('click', window.onMapPinClick);
     });
-
   };
 
   var errorButton = errorContainer.querySelector('.error__button');
@@ -161,7 +132,67 @@
     //  повторный запрос данных
     window.backend.load(window.createDataPin, window.createEror);
     //  закрытие окна
-
     errorParent.removeChild(errorContainer);
   });
+
+  /* ВЫГРУЗКА ДАННЫХ */
+  //  реализация окна успешной отправки формы
+  var successParent = document.querySelector('main');
+  var successContainer = document.querySelector('#success')
+    .content.querySelector('.success').cloneNode(true);
+
+  var createSuccessUpload = function () {
+    successParent.appendChild(successContainer);
+    window.removeElement('.new-pin');
+    window.removeElement('.map__card');
+
+    document.querySelector('.map').classList.add('map--faded');
+    var formFieldAll = document.querySelector('.ad-form');
+    formFieldAll.classList.add('ad-form--disabled');
+    var formFilters = document.querySelector('.map__filters');
+    formFilters.classList.add('ad-form--disabled');
+    var formFiltersFieldset = formFilters.querySelectorAll('select');
+    window.changeElementDisabledAtribute(formFiltersFieldset, true);
+    var formFieldset = formFieldAll.querySelectorAll('fieldset');
+    window.changeElementDisabledAtribute(formFieldset, true);
+    document.querySelectorAll('form').forEach(function (elem) {
+      elem.reset();
+    });
+    document.querySelector('.map__pin--main').style.left = '570' + 'px';
+    document.querySelector('.map__pin--main').style.top = '375' + 'px';
+
+    //  большая метка нанеактивной карте
+    var mapPinMain = document.querySelector('.map__pin--main');
+    //  высота mapPinMain
+    var mapPinMainHeigth = mapPinMain.offsetHeight;
+    //  ширина mapPinMain
+    var mapPinMainWidth = mapPinMain.offsetWidth;
+    //  координаты пина на карте
+    var noticeBlockFormAdress = document.querySelector('#address');
+    var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 15;
+    var mapPinCordinatX = mapPinMain.offsetLeft + Math.floor((mapPinMainWidth / 2));
+    // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
+    noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
+    window.dataLoad = false;
+
+    //  обработчик события на кнопку ESC для окна успешной отправки формы
+    var listener = function (evt) {
+      if (evt.keyCode === 27) {
+        successParent.removeChild(successContainer);
+        document.removeEventListener('keydown', listener);
+      }
+    };
+    //  закрытие окна успешной отправки формы
+    document.addEventListener('keydown', listener);
+  };
+
+  var noticeBlock = document.querySelector('.notice');
+  //  форма ввода
+  var formBlock = noticeBlock.querySelector('.ad-form');
+  //  событие нажатия на кнопку отправки формы
+  formBlock.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.backend.upload(new FormData(formBlock), createSuccessUpload, window.createEror);
+  });
+
 })();

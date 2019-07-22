@@ -62,15 +62,15 @@
   //  реализация перетаскивания пина по карте
   //  сcылка на елемент для захвата
   var appActive = false;
-  var dataLoad = false;
+  window.dataLoad = false;
 
 
   //  событие захвата
   mapPinMain.addEventListener('mousedown', function (evt) {
     //  реализация только одной загрузки данных без повторения при повторном нажатии на клик
-    if (!dataLoad) {
+    if (!window.dataLoad) {
       window.backend.load(window.createDataPin, window.createEror);
-      dataLoad = true;
+      window.dataLoad = true;
     }
     //  убираем класс map--faded
     mapVision.classList.remove('map--faded');
