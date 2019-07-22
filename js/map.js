@@ -61,7 +61,7 @@
 
   //  реализация перетаскивания пина по карте
   //  сcылка на елемент для захвата
-  var appActive = false;
+  window.appActive = false;
   window.dataLoad = false;
 
 
@@ -121,7 +121,7 @@
 
       //  определнние координат на случай если жвижение попапа отсутствует и происходит только нажатие
       noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-      if (!appActive) {
+      if (!window.appActive) {
         //  убираем у формы  ad-form--disabled
         formFieldAll.classList.remove('ad-form--disabled');
         //  изменяем всем филдсетам disabled=false
@@ -131,7 +131,7 @@
         // разблокируем форму с фильтрами
         formFilters.classList.remove('ad-form--disabled');
 
-        appActive = true;
+        window.appActive = true;
       }
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);

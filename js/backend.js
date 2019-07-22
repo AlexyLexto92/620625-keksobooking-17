@@ -137,11 +137,11 @@
 
   /* ВЫГРУЗКА ДАННЫХ */
   //  реализация окна успешной отправки формы
-  var successParent = document.querySelector('main');
-  var successContainer = document.querySelector('#success')
-    .content.querySelector('.success').cloneNode(true);
-
   var createSuccessUpload = function () {
+    var successParent = document.querySelector('main');
+    var successContainer = document.querySelector('#success')
+      .content.querySelector('.success').cloneNode(true);
+
     successParent.appendChild(successContainer);
     window.removeElement('.new-pin');
     window.removeElement('.map__card');
@@ -174,16 +174,20 @@
     // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
     noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
     window.dataLoad = false;
+    window.appActive = false;
 
     //  обработчик события на кнопку ESC для окна успешной отправки формы
     var listener = function (evt) {
       if (evt.keyCode === 27) {
-        successParent.removeChild(successContainer);
+        window.removeElement('.success');
         document.removeEventListener('keydown', listener);
       }
+      window.removeElement('.success');
+      document.removeEventListener('click', listener);
     };
     //  закрытие окна успешной отправки формы
     document.addEventListener('keydown', listener);
+    document.addEventListener('click', listener);
   };
 
   var noticeBlock = document.querySelector('.notice');
