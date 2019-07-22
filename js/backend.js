@@ -141,41 +141,8 @@
     var successParent = document.querySelector('main');
     var successContainer = document.querySelector('#success')
       .content.querySelector('.success').cloneNode(true);
-
     successParent.appendChild(successContainer);
-    window.removeElement('.new-pin');
-    window.removeElement('.map__card');
-
-    document.querySelector('.map').classList.add('map--faded');
-    var formFieldAll = document.querySelector('.ad-form');
-    formFieldAll.classList.add('ad-form--disabled');
-    var formFilters = document.querySelector('.map__filters');
-    formFilters.classList.add('ad-form--disabled');
-    var formFiltersFieldset = formFilters.querySelectorAll('select');
-    window.changeElementDisabledAtribute(formFiltersFieldset, true);
-    var formFieldset = formFieldAll.querySelectorAll('fieldset');
-    window.changeElementDisabledAtribute(formFieldset, true);
-    document.querySelectorAll('form').forEach(function (elem) {
-      elem.reset();
-    });
-    document.querySelector('.map__pin--main').style.left = '570' + 'px';
-    document.querySelector('.map__pin--main').style.top = '375' + 'px';
-
-    //  большая метка нанеактивной карте
-    var mapPinMain = document.querySelector('.map__pin--main');
-    //  высота mapPinMain
-    var mapPinMainHeigth = mapPinMain.offsetHeight;
-    //  ширина mapPinMain
-    var mapPinMainWidth = mapPinMain.offsetWidth;
-    //  координаты пина на карте
-    var noticeBlockFormAdress = document.querySelector('#address');
-    var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 15;
-    var mapPinCordinatX = mapPinMain.offsetLeft + Math.floor((mapPinMainWidth / 2));
-    // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
-    noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-    window.dataLoad = false;
-    window.appActive = false;
-
+    window.onInactiveState();
     //  обработчик события на кнопку ESC для окна успешной отправки формы
     var listener = function (evt) {
       if (evt.keyCode === 27) {
