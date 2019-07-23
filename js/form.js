@@ -171,7 +171,6 @@
   function commonFilter(elem) {
     return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
   }
-
   var onChangePinFiltersFields = function () {
     //  удаление пинов
     window.removeElement('.new-pin');
@@ -231,5 +230,7 @@
     evt.preventDefault();
     window.onInactiveState();
   });
+
+  /* Личный проект: шэр, лайк (необязательное задание) */
 
 })();

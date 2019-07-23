@@ -44,6 +44,9 @@
     noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
     window.dataLoad = false;
     window.appActive = false;
+    //  картинка пина,которую изменили
+    var preview = document.querySelector('.map__pin--main img');
+    preview.src = 'img/muffin-red.svg';
   };
   window.showCard = function () {
     var newPins = document.querySelectorAll('.new-pin');
