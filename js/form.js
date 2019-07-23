@@ -178,8 +178,16 @@
 
     window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
     //  функция отображения пинов
-    mapPin.appendChild(window.pinsFragment);
-    window.showCard();
+    var lastTimeout;
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    window.setTimeout(function () {
+      mapPin.appendChild(window.pinsFragment);
+      window.showCard();
+    }, 500);
+    //  mapPin.appendChild(window.pinsFragment);
+
   };
   //  для каждого елемента массива ставим слушатель
 
