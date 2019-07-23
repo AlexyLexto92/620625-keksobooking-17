@@ -45,4 +45,11 @@
     window.dataLoad = false;
     window.appActive = false;
   };
+  window.showCard = function () {
+    var newPins = document.querySelectorAll('.new-pin');
+    //  нажатие на любой из пинов
+    newPins.forEach(function (elem) {
+      elem.addEventListener('click', window.onMapPinClick);
+    });
+  };
 })();

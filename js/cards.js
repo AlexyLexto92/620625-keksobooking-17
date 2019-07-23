@@ -35,9 +35,10 @@
       window.targetPath = evt.target.alt;
     }
     // отрисовка карточек пинов
-    var similarMapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-    window.closeCardPopup();
+
     var renderCards = function () {
+      var similarMapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+      window.closeCardPopup();
       var cardsElement = similarMapCardTemplate.cloneNode(true);
       window.apartmentsListSlice.forEach(function (ads) {
         if (window.targetPath === ads.offer.title) {
@@ -71,7 +72,7 @@
           cardPhotos.innerHTML = '';
           //  для каждого елемента массива создаём новый елемент и вставляем его в родительский
           ads.offer.photos.forEach(function (elem) {
-            if (elem !== undefined) {
+            if (elem) {
               cardPhotos.innerHTML += '<img src="' + elem + '" class="popup__photo" width="45" height="40" alt="Фотография жилья">';
             }
           });
@@ -83,8 +84,10 @@
     fragment.appendChild(renderCards());
     var mapPin = document.querySelector('.map__pins');
     mapPin.appendChild(fragment);
+    window.showCard();
     var onCloseCardButton = document.querySelector('.popup__close');
     onCloseCardButton.addEventListener('click', window.closeCardPopup);
     document.addEventListener('keydown', window.closeCardPopupEsc);
   };
+
 })();

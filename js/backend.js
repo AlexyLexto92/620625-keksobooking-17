@@ -77,13 +77,16 @@
     errorParent.appendChild(errorContainer);
     //  обработчик события на кнопку ESC для окна ошибки получения данных
     var listenerError = function (evt) {
+      evt.preventDefault();
       if (evt.keyCode === 27) {
-        errorParent.removeChild(errorContainer);
+        window.removeElement('.error');
       }
       document.removeEventListener('keydown', listenerError);
+      document.removeEventListener('mousedown', listenerError);
     };
     //  закрытие окна ошибки отправки формы
     document.addEventListener('keydown', listenerError);
+    document.addEventListener('mousedown', listenerError);
   };
 
   //  функция заполнения массива данными из сервера
@@ -116,23 +119,16 @@
     window.pinsFragment = window.createPinsFragment(window.apartmentsListSlice);
     //  функция отображения пинов после загрузки карты
     mapPin.appendChild(window.pinsFragment);
-
-    //  набор пинов
-    var newPins = document.querySelectorAll('.new-pin');
-    //  нажатие на любой из пинов
-    Array.from(newPins).forEach(function (elem) {
-      elem.addEventListener('click', window.onMapPinClick);
-    });
+    window.showCard();
   };
-
+  //  нужно изолировать функции в событии  каждой отправки/ приёма даных
   var errorButton = errorContainer.querySelector('.error__button');
   //  событие нажатия кнопки Еще раз для запроса данных с сервера
   errorButton.addEventListener('click', function (evt) {
     evt.preventDefault();
-    //  повторный запрос данных
-    window.backend.load(window.createDataPin, window.createEror);
+    window.onInactiveState();
     //  закрытие окна
-    errorParent.removeChild(errorContainer);
+    window.removeElement('.error');
   });
 
   /* ВЫГРУЗКА ДАННЫХ */
@@ -156,7 +152,6 @@
     document.addEventListener('keydown', listener);
     document.addEventListener('click', listener);
   };
-
   var noticeBlock = document.querySelector('.notice');
   //  форма ввода
   var formBlock = noticeBlock.querySelector('.ad-form');

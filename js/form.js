@@ -124,12 +124,12 @@
   function priceOfHousingfilter(elem) {
     if (PriceOfHousing.value === 'any') {
       return true;
-    } else if (PriceOfHousing === 'low') {
+    } else if (PriceOfHousing.value === 'low') {
       return elem.offer.price <= 10000;
-    } else if (PriceOfHousing === 'high') {
+    } else if (PriceOfHousing.value === 'high') {
       return elem.offer.price >= 50000;
-    } else if (PriceOfHousing === 'middle') {
-      return true;
+    } else if (PriceOfHousing.value === 'middle') {
+      return elem.offer.price >= 10000 && elem.offer.price <= 50000;
     }
     return false;
   }
@@ -166,13 +166,7 @@
     }
     return filtered;
   }
-  //  удаление пинов
-  function clearAllPins() {
-    var newPins = mapPin.querySelectorAll('.new-pin');
-    newPins.forEach(function (Element) {
-      mapPin.removeChild(Element);
-    });
-  }
+
   //  общий фильтр
   function commonFilter(elem) {
     return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
@@ -180,11 +174,13 @@
 
   var onChangePinFiltersFields = function () {
     //  удаление пинов
-    clearAllPins();
+    window.removeElement('.new-pin');
+    window.removeElement('.map__card');
+
     window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
     //  функция отображения пинов
     mapPin.appendChild(window.pinsFragment);
-
+    window.showCard();
   };
   //  для каждого елемента массива ставим слушатель
 
