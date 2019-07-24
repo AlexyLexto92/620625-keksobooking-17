@@ -116,7 +116,7 @@
       return true;
     }
     return elem.offer.type === housingType.value;
-  }
+  };
 
   //  фильтр стоимости
   var PriceOfHousing = formFilters.querySelector('#housing-price');
@@ -132,7 +132,7 @@
       return elem.offer.price >= 10000 && elem.offer.price <= 50000;
     }
     return false;
-  }
+  };
 
   //  фильтрация по количеству комнат
   var numOfRums = formFilters.querySelector('#housing-rooms');
@@ -142,7 +142,7 @@
       return true;
     }
     return elem.offer.rooms === Number(numOfRums.value);
-  }
+  };
   //  фильтрация по количеству гостей
   var numOfGuests = formFilters.querySelector('#housing-guests');
 
@@ -151,7 +151,7 @@
       return true;
     }
     return elem.offer.guests === Number(numOfGuests.value);
-  }
+  };
 
   //  фильтрация по чекбоксам
   var featuresFilter = function (elem) {
@@ -165,12 +165,12 @@
       });
     }
     return filtered;
-  }
+  };
 
   //  общий фильтр
   var commonFilter = function (elem) {
     return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
-  }
+  };
   //  событие изменения фильтров пинов
   var onChangePinFiltersFields = function () {
     //  удаление пинов
