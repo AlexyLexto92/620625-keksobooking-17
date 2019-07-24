@@ -42,8 +42,8 @@
     var mapPinCordinatX = mapPinMain.offsetLeft + Math.floor((mapPinMainWidth / 2));
     // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
     noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-    window.dataLoad = false;
-    window.appActive = false;
+    window.isDataLoad = false;
+    window.isAppActive = false;
     //  картинка пина,которую изменили
     var preview = document.querySelector('.map__pin--main img');
     preview.src = 'img/muffin-red.svg';

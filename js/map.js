@@ -75,8 +75,8 @@
 
   //  реализация перетаскивания пина по карте
   //  сcылка на елемент для захвата
-  window.appActive = false;
-  window.dataLoad = false;
+  window.isAppActive = false;
+  window.isDataLoad = false;
   // событие нажатия на Enter
 
   //  функция нажатия Enter на главный пин
@@ -85,7 +85,7 @@
     if (evt.keyCode === 13) {
       mapVision.classList.remove('map--faded');
       window.backend.load(window.createDataPin, window.createEror);
-      window.dataLoad = true;
+      window.isDataLoad = true;
       //  при активации пина координаты меняються от цента на конец  пина(48 пикселей)
       mapPinCordinatY += 48;
       //  определнние координат на случай если жвижение попапа отсутствует и происходит только нажатие
@@ -98,7 +98,7 @@
       window.changeElementDisabledAtribute(formFiltersFieldset, false);
       // разблокируем форму с фильтрами
       formFilters.classList.remove('ad-form--disabled');
-      window.appActive = true;
+      window.isAppActive = true;
     }
   };
   //  событие нажатия Enter на главный пин
@@ -106,9 +106,9 @@
   //  событие захвата
   mapPinMain.addEventListener('mousedown', function (evt) {
     //  реализация только одной загрузки данных без повторения при повторном нажатии на клик
-    if (!window.dataLoad) {
+    if (!window.isDataLoad) {
       window.backend.load(window.createDataPin, window.createEror);
-      window.dataLoad = true;
+      window.isDataLoad = true;
     }
     //  убираем класс map--faded
     mapVision.classList.remove('map--faded');
@@ -159,7 +159,7 @@
 
       //  определнние координат на случай если жвижение попапа отсутствует и происходит только нажатие
       noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-      if (!window.appActive) {
+      if (!window.isAppActive) {
         //  убираем у формы  ad-form--disabled
         formFieldAll.classList.remove('ad-form--disabled');
         //  изменяем всем филдсетам disabled=false
@@ -169,7 +169,7 @@
         // разблокируем форму с фильтрами
         formFilters.classList.remove('ad-form--disabled');
 
-        window.appActive = true;
+        window.isAppActive = true;
       }
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
