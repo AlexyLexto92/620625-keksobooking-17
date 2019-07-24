@@ -30,4 +30,38 @@
       reader.readAsDataURL(file);
     }
   });
+  //  реализация загрузки множества картинок
+  //  поле вставки картинок
+  var imageUploadChooser = document.querySelector('.ad-form__upload input[type=file]');
+  //  поле в которум отображаються картинки
+  var imageUploadPreview = document.querySelector('.ad-form__photo');
+
+  imageUploadChooser.addEventListener('change', function () {
+    var file = imageUploadChooser.files[0];
+    if (file) {
+      var fileName = file.name.toLowerCase();
+
+      var matches = FILE_TYPES.some(function (it) {
+        return fileName.endsWith(it);
+      });
+
+      if (matches) {
+        //  создаём елемента img
+        var imgElement = document.createElement('img');
+        //  добавляем кго в поле отбражения
+        imageUploadPreview.appendChild(imgElement);
+        var reader = new FileReader();
+        //  для каждой загрузки изображения добавляем стили как картинке так и принимающему блоку
+        reader.addEventListener('load', function () {
+          imageUploadPreview.style.width = 'auto';
+          imgElement.src = reader.result;
+          imgElement.width = 75;
+          imgElement.height = 75;
+          imgElement.style.marginRight = '5px';
+        });
+
+        reader.readAsDataURL(file);
+      }
+    }
+  });
 })();
