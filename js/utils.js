@@ -38,7 +38,7 @@
     var mapPinMainWidth = mapPinMain.offsetWidth;
     //  координаты пина на карте
     var noticeBlockFormAdress = document.querySelector('#address');
-    var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 15;
+    var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 15 - 48;
     var mapPinCordinatX = mapPinMain.offsetLeft + Math.floor((mapPinMainWidth / 2));
     // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
     noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
@@ -48,11 +48,17 @@
     var preview = document.querySelector('.map__pin--main img');
     preview.src = 'img/muffin-red.svg';
   };
-  window.showCard = function () {
-    var newPins = document.querySelectorAll('.new-pin');
-    //  нажатие на любой из пинов
-    newPins.forEach(function (elem) {
-      elem.addEventListener('click', window.onMapPinClick);
-    });
-  };
+
+  //  сортировка ейтса ,на вход берет массив array
+  function yatesSort(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    //  по логике этого  сортировщика он выводит входящий массив
+    return array;
+  }
+  window.yatesSort = yatesSort;
 })();

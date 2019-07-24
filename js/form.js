@@ -171,28 +171,25 @@
   function commonFilter(elem) {
     return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
   }
+  //  событие изменения фильтров пинов
   var onChangePinFiltersFields = function () {
     //  удаление пинов
     window.removeElement('.new-pin');
+    //  удаление карточки
     window.removeElement('.map__card');
 
     window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
-    //  функция отображения пинов
+    //  функция отображения пинов c задержкой времени(устранение дребезга)
     var lastTimeout;
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
     window.setTimeout(function () {
       mapPin.appendChild(window.pinsFragment);
-      window.showCard();
     }, 500);
-    //  mapPin.appendChild(window.pinsFragment);
-
   };
   //  для каждого елемента массива ставим слушатель
-
   formFilters.addEventListener('change', onChangePinFiltersFields);
-
   //  валидация формы количества гостей и кол-ва комнат
   var inputRoomNumber = document.querySelector('#room_number');
   var inputCapacity = document.querySelector('#capacity');
@@ -226,7 +223,7 @@
   };
   //  сразу запускаем функцию для первой коректной связи между полями до изменения поля количества комнат
   inputRoomNumberValidation();
-
+  //  и продолжаем при каждом изменении количества комнат
   var changeinputRoomNumber = function () {
     inputRoomNumberValidation();
   };
@@ -238,7 +235,4 @@
     evt.preventDefault();
     window.onInactiveState();
   });
-
-  /* Личный проект: шэр, лайк (необязательное задание) */
-
 })();

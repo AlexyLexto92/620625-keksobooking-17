@@ -41,12 +41,13 @@
 
   // отрисовка пинов
   var similarMapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
   var createPin = function (properties) {
     var PinElement = similarMapPinTemplate.cloneNode(true);
+    PinElement.dataset.id = properties.id;
     PinElement.style.top = properties.location.y - pinHeight + 'px';
     PinElement.style.left = properties.location.x - pinWidth / 2 + 'px';
     PinElement.querySelector('img').setAttribute('src', properties.author.avatar);
-    PinElement.querySelector('img').setAttribute('alt', properties.offer.title);
     PinElement.classList.add('new-pin');
     return PinElement;
   };
@@ -54,7 +55,20 @@
   window.createPinsFragment = function (pinsArray) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pinsArray.length; i++) {
-      fragment.appendChild(createPin(pinsArray[i]));
+      var newPin = createPin(pinsArray[i]);
+      newPin.addEventListener('click', function (evt) {
+        var uniqId = evt.currentTarget.dataset.id;
+        window.apartmentsList.forEach(function (elem) {
+          if (elem.id === uniqId) {
+            mapPin.appendChild(window.renderCard(elem));
+          }
+        });
+        //  навешиваем события закрытия карточки
+        var onCloseCardButton = document.querySelector('.popup__close');
+        onCloseCardButton.addEventListener('click', window.closeCardPopup);
+        document.addEventListener('keydown', window.closeCardPopupEsc);
+      });
+      fragment.appendChild(newPin);
     }
     return fragment;
   };
@@ -63,8 +77,30 @@
   //  сcылка на елемент для захвата
   window.appActive = false;
   window.dataLoad = false;
+  // событие нажатия на Enter
 
+  //  функция нажатия Enter на главный пин
+  var onPressEnterPin = function (evt) {
 
+    if (evt.keyCode === 13) {
+      mapVision.classList.remove('map--faded');
+      window.backend.load(window.createDataPin, window.createEror);
+      window.dataLoad = true;
+      //  определнние координат на случай если жвижение попапа отсутствует и происходит только нажатие
+      noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
+      //  убираем у формы  ad-form--disabled
+      formFieldAll.classList.remove('ad-form--disabled');
+      //  изменяем всем филдсетам disabled=false
+      window.changeElementDisabledAtribute(formFieldset, false);
+      //  добавляем всем филдсетам disabled=false
+      window.changeElementDisabledAtribute(formFiltersFieldset, false);
+      // разблокируем форму с фильтрами
+      formFilters.classList.remove('ad-form--disabled');
+      window.appActive = true;
+    }
+  };
+  //  событие нажатия Enter на главный пин
+  mapPinMain.addEventListener('keydown', onPressEnterPin);
   //  событие захвата
   mapPinMain.addEventListener('mousedown', function (evt) {
     //  реализация только одной загрузки данных без повторения при повторном нажатии на клик
