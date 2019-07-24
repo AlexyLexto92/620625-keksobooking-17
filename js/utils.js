@@ -21,10 +21,10 @@
     formFieldAll.classList.add('ad-form--disabled');
     var formFilters = document.querySelector('.map__filters');
     formFilters.classList.add('ad-form--disabled');
-    var formFiltersFieldset = formFilters.querySelectorAll('select');
-    window.changeElementDisabledAtribute(formFiltersFieldset, true);
-    var formFieldset = formFieldAll.querySelectorAll('fieldset');
-    window.changeElementDisabledAtribute(formFieldset, true);
+    var formFiltersFieldsets = formFilters.querySelectorAll('select');
+    window.changeElementDisabledAtribute(formFiltersFieldsets, true);
+    var formFieldsets = formFieldAll.querySelectorAll('fieldset');
+    window.changeElementDisabledAtribute(formFieldsets, true);
     document.querySelectorAll('form').forEach(function (elem) {
       elem.reset();
     });

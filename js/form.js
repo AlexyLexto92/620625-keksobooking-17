@@ -6,12 +6,12 @@
   var mapPin = document.querySelector('.map__pins');
   var formFieldAll = document.querySelector('.ad-form');
   // находим все fieldset формы обьявления
-  var formFieldset = formFieldAll.querySelectorAll('fieldset');
+  var formFieldsets = formFieldAll.querySelectorAll('fieldset');
   //  форма фильтры
   var formFilters = document.querySelector('.map__filters');
   formFilters.classList.add('ad-form--disabled');
   //  находим все select формы фильтров
-  var formFiltersFieldset = formFilters.querySelectorAll('select');
+  var formFiltersFieldsets = formFilters.querySelectorAll('select');
 
   //  форма отправки обьявления
   var noticeBlock = document.querySelector('.notice');
@@ -21,9 +21,9 @@
   noticeBlockForm.action = 'https://js.dump.academy/keksobooking';
 
   //  добавляем всем филдсетам disabled=true
-  window.changeElementDisabledAtribute(formFiltersFieldset, true);
+  window.changeElementDisabledAtribute(formFiltersFieldsets, true);
   //  добавляем всем филдсетам disabled=true
-  window.changeElementDisabledAtribute(formFieldset, true);
+  window.changeElementDisabledAtribute(formFieldsets, true);
 
   //  5
   //  заголовок обьявления

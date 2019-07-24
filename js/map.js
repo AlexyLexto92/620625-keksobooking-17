@@ -21,10 +21,10 @@
   //  форма фильтры
   var formFilters = document.querySelector('.map__filters');
   //  находим все select формы фильтров
-  var formFiltersFieldset = formFilters.querySelectorAll('select');
+  var formFiltersFieldsets = formFilters.querySelectorAll('select');
   var formFieldAll = document.querySelector('.ad-form');
   // находим все fieldset формы обьявления
-  var formFieldset = formFieldAll.querySelectorAll('fieldset');
+  var formFieldsets = formFieldAll.querySelectorAll('fieldset');
 
   //  кординаты pin*a на карте
   var mapPinCordinatY = mapPinMain.offsetTop + Math.floor(mapPinMainHeigth / 2);
@@ -93,9 +93,9 @@
       //  убираем у формы  ad-form--disabled
       formFieldAll.classList.remove('ad-form--disabled');
       //  изменяем всем филдсетам disabled=false
-      window.changeElementDisabledAtribute(formFieldset, false);
+      window.changeElementDisabledAtribute(formFieldsets, false);
       //  добавляем всем филдсетам disabled=false
-      window.changeElementDisabledAtribute(formFiltersFieldset, false);
+      window.changeElementDisabledAtribute(formFiltersFieldsets, false);
       // разблокируем форму с фильтрами
       formFilters.classList.remove('ad-form--disabled');
       window.isAppActive = true;
@@ -163,9 +163,9 @@
         //  убираем у формы  ad-form--disabled
         formFieldAll.classList.remove('ad-form--disabled');
         //  изменяем всем филдсетам disabled=false
-        window.changeElementDisabledAtribute(formFieldset, false);
+        window.changeElementDisabledAtribute(formFieldsets, false);
         //  добавляем всем филдсетам disabled=false
-        window.changeElementDisabledAtribute(formFiltersFieldset, false);
+        window.changeElementDisabledAtribute(formFiltersFieldsets, false);
         // разблокируем форму с фильтрами
         formFilters.classList.remove('ad-form--disabled');
 
