@@ -50,7 +50,7 @@
   };
 
   //  сортировка ейтса ,на вход берет массив array
-  function yatesSort(array) {
+  window.yatesSort = function (array) {
     for (var i = array.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var temp = array[i];
@@ -60,5 +60,4 @@
     //  по логике этого  сортировщика он выводит входящий массив
     return array;
   }
-  window.yatesSort = yatesSort;
 })();

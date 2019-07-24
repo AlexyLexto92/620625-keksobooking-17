@@ -111,7 +111,7 @@
   var housingType = formFilters.querySelector('#housing-type');
 
   //  фильтр типа жилья
-  function typeOfHousingFilter(elem) {
+  var typeOfHousingFilter = function (elem) {
     if (housingType.value === 'any') {
       return true;
     }
@@ -121,7 +121,7 @@
   //  фильтр стоимости
   var PriceOfHousing = formFilters.querySelector('#housing-price');
 
-  function priceOfHousingfilter(elem) {
+  var priceOfHousingfilter = function (elem) {
     if (PriceOfHousing.value === 'any') {
       return true;
     } else if (PriceOfHousing.value === 'low') {
@@ -137,7 +137,7 @@
   //  фильтрация по количеству комнат
   var numOfRums = formFilters.querySelector('#housing-rooms');
 
-  function numOfRumsFilter(elem) {
+  var numOfRumsFilter = function (elem) {
     if (numOfRums.value === 'any') {
       return true;
     }
@@ -146,7 +146,7 @@
   //  фильтрация по количеству гостей
   var numOfGuests = formFilters.querySelector('#housing-guests');
 
-  function numOfGuestsFilter(elem) {
+  var numOfGuestsFilter = function (elem) {
     if (numOfGuests.value === 'any') {
       return true;
     }
@@ -154,7 +154,7 @@
   }
 
   //  фильтрация по чекбоксам
-  function featuresFilter(elem) {
+  var featuresFilter = function (elem) {
     var filterFeaturesCheckboxes = document.querySelectorAll('.map__features input[type=checkbox]:checked');
     var filtered = true;
     if (filterFeaturesCheckboxes.length) {
@@ -168,7 +168,7 @@
   }
 
   //  общий фильтр
-  function commonFilter(elem) {
+  var commonFilter = function (elem) {
     return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
   }
   //  событие изменения фильтров пинов
