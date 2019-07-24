@@ -105,6 +105,7 @@
         window.isAppActive = true;
       }
     }
+    mapPinMain.removeEventListener('keydown', onPressEnterPin);
   };
   //  событие нажатия Enter на главный пин
   mapPinMain.addEventListener('keydown', onPressEnterPin);
