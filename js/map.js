@@ -86,6 +86,8 @@
       mapVision.classList.remove('map--faded');
       window.backend.load(window.createDataPin, window.createEror);
       window.dataLoad = true;
+      //  при активации пина координаты меняються от цента на конец  пина(48 пикселей)
+      mapPinCordinatY += 48;
       //  определнние координат на случай если жвижение попапа отсутствует и происходит только нажатие
       noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
       //  убираем у формы  ad-form--disabled
