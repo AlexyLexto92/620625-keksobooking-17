@@ -59,7 +59,7 @@
       newPin.addEventListener('click', function (evt) {
         var uniqId = evt.currentTarget.dataset.id;
         window.apartmentsList.forEach(function (elem) {
-          if (elem.id === uniqId) {
+          if (elem.id === Number(uniqId)) {
             mapPin.appendChild(window.renderCard(elem));
           }
         });
@@ -84,21 +84,26 @@
 
     if (evt.keyCode === 13) {
       mapVision.classList.remove('map--faded');
-      window.backend.load(window.createDataPin, window.createEror);
-      window.isDataLoad = true;
+
+      if (!window.isDataLoad) {
+        window.backend.load(window.createDataPin, window.createEror);
+        window.isDataLoad = true;
+      }
       //  при активации пина координаты меняються от цента на конец  пина(48 пикселей)
       mapPinCordinatY += 48;
       //  определнние координат на случай если жвижение попапа отсутствует и происходит только нажатие
       noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-      //  убираем у формы  ad-form--disabled
-      formFieldAll.classList.remove('ad-form--disabled');
-      //  изменяем всем филдсетам disabled=false
-      window.changeElementDisabledAtribute(formFieldsets, false);
-      //  добавляем всем филдсетам disabled=false
-      window.changeElementDisabledAtribute(formFiltersFieldsets, false);
-      // разблокируем форму с фильтрами
-      formFilters.classList.remove('ad-form--disabled');
-      window.isAppActive = true;
+      if (!window.isAppActive) {
+        //  убираем у формы  ad-form--disabled
+        formFieldAll.classList.remove('ad-form--disabled');
+        //  изменяем всем филдсетам disabled=false
+        window.changeElementDisabledAtribute(formFieldsets, false);
+        //  добавляем всем филдсетам disabled=false
+        window.changeElementDisabledAtribute(formFiltersFieldsets, false);
+        // разблокируем форму с фильтрами
+        formFilters.classList.remove('ad-form--disabled');
+        window.isAppActive = true;
+      }
     }
   };
   //  событие нажатия Enter на главный пин
