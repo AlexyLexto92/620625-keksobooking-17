@@ -15,7 +15,11 @@
     xhr.addEventListener('load', function () {
       //  успешно
       if (xhr.status === STATUS_GOOD) {
-        onSuccess(xhr.response);
+        var response = xhr.response.slice();
+        for (var i = 0; i < response.length; i++) {
+          response[i].id = i;
+        }
+        onSuccess(response);
         //  ошибка
       } else {
         createEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -64,26 +68,7 @@
     upload: upload
   };
 
-  //  реализация окна успешной отправки формы
-  var successParent = document.querySelector('main');
-  var successContainer = document.querySelector('#success')
-    .content.querySelector('.success').cloneNode(true);
-
-
-  var createSuccess = function () {
-    successParent.appendChild(successContainer);
-
-    //  обработчик события на кнопку ESC для окна успешной отправки формы
-    var listener = function (evt) {
-      if (evt.keyCode === 27) {
-        successParent.removeChild(successContainer);
-        document.removeEventListener('keydown', listener);
-      }
-    };
-    //  закрытие окна успешной отправки формы
-    document.addEventListener('keydown', listener);
-  };
-
+  /*  ЗАГРУЗКА ДАННЫХ*/
   //  сценарий ошибки загрузки данных
   var errorParent = document.querySelector('main');
   var errorContainer = document.querySelector('#error')
@@ -92,17 +77,67 @@
   var mapPin = document.querySelector('.map__pins');
 
   window.createEror = function (message) {
+
     errorMessage.textContent = message;
     errorParent.appendChild(errorContainer);
     //  обработчик события на кнопку ESC для окна ошибки получения данных
-    var listenerError = function (evt) {
+    var listener = function (evt) {
+      evt.preventDefault();
       if (evt.keyCode === 27) {
-        errorParent.removeChild(errorContainer);
-        document.removeEventListener('keydown', listenerError);
+        window.removeElement('.error');
+        window.onInactiveState();
+        document.removeEventListener('keydown', listener);
       }
+      window.removeElement('.error');
+      window.onInactiveState();
+      document.removeEventListener('mousedown', listener);
     };
     //  закрытие окна ошибки отправки формы
-    document.addEventListener('keydown', listenerError);
+    document.addEventListener('keydown', listener);
+    document.addEventListener('mousedown', listener);
+  };
+
+  //  функция заполнения массива данными из сервера
+  window.createDataPin = function (apartmentServerSideData) {
+    //  создали пустой массив для данных с сервера
+    window.apartmentsList = apartmentServerSideData;
+    //  Сортируем исходный массив в рандомном порядке и записываем его в новый массив
+    window.apartmentsListSlice = window.yatesSort(window.apartmentsList).slice(0, 5);
+    //  задал аргументом новый массив
+    window.pinsFragment = window.createPinsFragment(window.apartmentsListSlice);
+    //  функция отображения пинов после загрузки карты
+    mapPin.appendChild(window.pinsFragment);
+  };
+  //  нужно изолировать функции в событии  каждой отправки/ приёма даных
+  var errorButton = errorContainer.querySelector('.error__button');
+  //  событие нажатия кнопки Еще раз для запроса данных с сервера
+  errorButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    window.onInactiveState();
+    //  закрытие окна
+    window.removeElement('.error');
+  });
+
+  /* ВЫГРУЗКА ДАННЫХ */
+  //  реализация окна успешной отправки формы
+  var createSuccessUpload = function () {
+    var successParent = document.querySelector('main');
+    var successContainer = document.querySelector('#success')
+      .content.querySelector('.success').cloneNode(true);
+    successParent.appendChild(successContainer);
+    window.onInactiveState();
+    //  обработчик события на кнопку ESC для окна успешной отправки формы
+    var listener = function (evt) {
+      if (evt.keyCode === 27) {
+        window.removeElement('.success');
+        document.removeEventListener('keydown', listener);
+      }
+      window.removeElement('.success');
+      document.removeEventListener('click', listener);
+    };
+    //  закрытие окна успешной отправки формы
+    document.addEventListener('keydown', listener);
+    document.addEventListener('click', listener);
   };
   var noticeBlock = document.querySelector('.notice');
   //  форма ввода
@@ -110,58 +145,7 @@
   //  событие нажатия на кнопку отправки формы
   formBlock.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.upload(new FormData(formBlock), createSuccess, window.createEror);
+    window.backend.upload(new FormData(formBlock), createSuccessUpload, window.createEror);
   });
 
-  //  функция заполнения массива данными из сервера
-  window.createDataPin = function (apartmentServerSideData) {
-    //  создали пустой массив для данных с сервера
-    window.apartmentsList = [];
-    for (var i = 0; i < apartmentServerSideData.length; i++) {
-      var apartment = apartmentServerSideData[i];
-      window.apartmentsList.push(apartment);
-    }
-
-    //   !!!!-----ЗАДАНИЕ 7-------!!!!
-    //  сортировка ейтса ,на вход берет массив array
-    function sortArray(array) {
-      for (i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-      }
-      //  по логике этого  сортировщика он выводит входящий массив
-      return array;
-    }
-
-    //  Создал новый массив
-    window.apartmentsListSlice = [];
-    //  Сортируем исходный массив в рандомном порядке и записываем его в новый массив
-    window.apartmentsListSlice = sortArray(window.apartmentsList).slice(0, 5);
-    //  задал аргументом новый массив
-    window.pinsFragment = window.createPinsFragment(window.apartmentsListSlice);
-    //  функция отображения пинов после загрузки карты
-    mapPin.appendChild(window.pinsFragment);
-
-
-    //  набор пинов
-    var newPins = document.querySelectorAll('.new-pin');
-    //  нажатие на любой из пинов
-    Array.from(newPins).forEach(function (elem) {
-      elem.addEventListener('click', window.onMapPinClick);
-    });
-
-  };
-
-  var errorButton = errorContainer.querySelector('.error__button');
-  //  событие нажатия кнопки Еще раз для запроса данных с сервера
-  errorButton.addEventListener('click', function (evt) {
-    evt.preventDefault();
-    //  повторный запрос данных
-    window.backend.load(window.createDataPin, window.createEror);
-    //  закрытие окна
-
-    errorParent.removeChild(errorContainer);
-  });
 })();

@@ -6,12 +6,12 @@
   var mapPin = document.querySelector('.map__pins');
   var formFieldAll = document.querySelector('.ad-form');
   // находим все fieldset формы обьявления
-  var formFieldset = formFieldAll.querySelectorAll('fieldset');
+  var formFieldsets = formFieldAll.querySelectorAll('fieldset');
   //  форма фильтры
   var formFilters = document.querySelector('.map__filters');
   formFilters.classList.add('ad-form--disabled');
   //  находим все select формы фильтров
-  var formFiltersFieldset = formFilters.querySelectorAll('select');
+  var formFiltersFieldsets = formFilters.querySelectorAll('select');
 
   //  форма отправки обьявления
   var noticeBlock = document.querySelector('.notice');
@@ -21,9 +21,9 @@
   noticeBlockForm.action = 'https://js.dump.academy/keksobooking';
 
   //  добавляем всем филдсетам disabled=true
-  window.changeElementDisabledAtribute(formFiltersFieldset, true);
+  window.changeElementDisabledAtribute(formFiltersFieldsets, true);
   //  добавляем всем филдсетам disabled=true
-  window.changeElementDisabledAtribute(formFieldset, true);
+  window.changeElementDisabledAtribute(formFieldsets, true);
 
   //  5
   //  заголовок обьявления
@@ -111,50 +111,50 @@
   var housingType = formFilters.querySelector('#housing-type');
 
   //  фильтр типа жилья
-  function typeOfHousingFilter(elem) {
+  var typeOfHousingFilter = function (elem) {
     if (housingType.value === 'any') {
       return true;
     }
     return elem.offer.type === housingType.value;
-  }
+  };
 
   //  фильтр стоимости
   var PriceOfHousing = formFilters.querySelector('#housing-price');
 
-  function priceOfHousingfilter(elem) {
+  var priceOfHousingfilter = function (elem) {
     if (PriceOfHousing.value === 'any') {
       return true;
-    } else if (PriceOfHousing === 'low') {
+    } else if (PriceOfHousing.value === 'low') {
       return elem.offer.price <= 10000;
-    } else if (PriceOfHousing === 'high') {
+    } else if (PriceOfHousing.value === 'high') {
       return elem.offer.price >= 50000;
-    } else if (PriceOfHousing === 'middle') {
-      return true;
+    } else if (PriceOfHousing.value === 'middle') {
+      return elem.offer.price >= 10000 && elem.offer.price <= 50000;
     }
     return false;
-  }
+  };
 
   //  фильтрация по количеству комнат
   var numOfRums = formFilters.querySelector('#housing-rooms');
 
-  function numOfRumsFilter(elem) {
+  var numOfRumsFilter = function (elem) {
     if (numOfRums.value === 'any') {
       return true;
     }
     return elem.offer.rooms === Number(numOfRums.value);
-  }
+  };
   //  фильтрация по количеству гостей
   var numOfGuests = formFilters.querySelector('#housing-guests');
 
-  function numOfGuestsFilter(elem) {
+  var numOfGuestsFilter = function (elem) {
     if (numOfGuests.value === 'any') {
       return true;
     }
     return elem.offer.guests === Number(numOfGuests.value);
-  }
+  };
 
   //  фильтрация по чекбоксам
-  function featuresFilter(elem) {
+  var featuresFilter = function (elem) {
     var filterFeaturesCheckboxes = document.querySelectorAll('.map__features input[type=checkbox]:checked');
     var filtered = true;
     if (filterFeaturesCheckboxes.length) {
@@ -165,28 +165,74 @@
       });
     }
     return filtered;
-  }
-  //  удаление пинов
-  function clearAllPins() {
-    var newPins = mapPin.querySelectorAll('.new-pin');
-    newPins.forEach(function (Element) {
-      mapPin.removeChild(Element);
-    });
-  }
-  //  общий фильтр
-  function commonFilter(elem) {
-    return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
-  }
+  };
 
+  //  общий фильтр
+  var commonFilter = function (elem) {
+    return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
+  };
+  //  событие изменения фильтров пинов
   var onChangePinFiltersFields = function () {
     //  удаление пинов
-    clearAllPins();
-    window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
-    //  функция отображения пинов
-    mapPin.appendChild(window.pinsFragment);
+    window.removeElement('.new-pin');
+    //  удаление карточки
+    window.removeElement('.map__card');
 
+    window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
+    //  функция отображения пинов c задержкой времени(устранение дребезга)
+    var lastTimeout;
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    window.setTimeout(function () {
+      mapPin.appendChild(window.pinsFragment);
+    }, 500);
   };
   //  для каждого елемента массива ставим слушатель
-
   formFilters.addEventListener('change', onChangePinFiltersFields);
+  //  валидация формы количества гостей и кол-ва комнат
+  var inputRoomNumber = document.querySelector('#room_number');
+  var inputCapacity = document.querySelector('#capacity');
+  var inputCapacityOptions = inputCapacity.querySelectorAll('option');
+  //  непосредственно функция валидации
+  var inputRoomNumberValidation = function () {
+    //  удаляем все option из select
+    inputCapacityOptions.forEach(function (elem) {
+      elem.remove();
+    });
+    //  функция добавления option[elem] в select(берем индексы подходящих значений кол-а гостей и вставляем в select)
+    var insertInputCapacityOptions = function (elements) {
+      elements.forEach(function (elem) {
+        inputCapacity.appendChild(inputCapacityOptions[elem]);
+      });
+    };
+    switch (inputRoomNumber.selectedIndex) {
+      case 0:
+        insertInputCapacityOptions([2]);
+        break;
+      case 1:
+        insertInputCapacityOptions([1, 2]);
+        break;
+      case 2:
+        insertInputCapacityOptions([0, 1, 2]);
+        break;
+      case 3:
+        insertInputCapacityOptions([3]);
+        break;
+    }
+  };
+  //  сразу запускаем функцию для первой коректной связи между полями до изменения поля количества комнат
+  inputRoomNumberValidation();
+  //  и продолжаем при каждом изменении количества комнат
+  var changeinputRoomNumber = function () {
+    inputRoomNumberValidation();
+  };
+  //  обработчик события изменения количества комнат
+  inputRoomNumber.addEventListener('change', changeinputRoomNumber);
+  //  реализация функционала кнопки Оистить
+  var resetButton = document.querySelector('.ad-form__reset');
+  resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    window.onInactiveState();
+  });
 })();
