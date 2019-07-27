@@ -3,9 +3,9 @@
   //  допустимые типы файлов картиновк
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   //  поле вставки картинок
-  var fileChooser = document.querySelector('input[type=file]');
+  var fileChooser = document.querySelector('.ad-form__field input[type=file]');
   //  картинка пина,которую нужно изменить
-  var preview = document.querySelector('.map__pin--main img');
+  var preview = document.querySelector('.ad-form-header__preview img');
   //  событие изменения
   fileChooser.addEventListener('change', function () {
     //   если что-то выбрано

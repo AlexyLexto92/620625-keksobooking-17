@@ -45,8 +45,8 @@
     window.isDataLoad = false;
     window.isAppActive = false;
     //  картинка пина,которую изменили
-    var preview = document.querySelector('.map__pin--main img');
-    preview.src = 'img/muffin-red.svg';
+    var preview = document.querySelector('.ad-form-header__preview img');
+    preview.src = 'img/muffin-grey.svg';
     window.removeElement('.ad-form__photo-item');
   };
 
