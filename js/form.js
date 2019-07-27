@@ -120,19 +120,24 @@
 
   //  фильтр стоимости
   var PriceOfHousing = formFilters.querySelector('#housing-price');
-
   var priceOfHousingfilter = function (elem) {
-    if (PriceOfHousing.value === 'any') {
-      return true;
-    } else if (PriceOfHousing.value === 'low') {
-      return elem.offer.price <= 10000;
-    } else if (PriceOfHousing.value === 'high') {
-      return elem.offer.price >= 50000;
-    } else if (PriceOfHousing.value === 'middle') {
-      return elem.offer.price >= 10000 && elem.offer.price <= 50000;
+    var priceValue = false;
+    switch (PriceOfHousing.value) {
+      case 'any':
+        priceValue = 'true';
+        break;
+      case 'low':
+        priceValue = elem.offer.price <= 10000;
+        break;
+      case 'high':
+        priceValue = elem.offer.price >= 50000;
+        break;
+      case 'middle':
+        priceValue = elem.offer.price >= 10000 && elem.offer.price <= 50000;
     }
-    return false;
+    return priceValue;
   };
+
 
   //  фильтрация по количеству комнат
   var numOfRums = formFilters.querySelector('#housing-rooms');
