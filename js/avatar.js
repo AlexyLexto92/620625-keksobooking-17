@@ -38,32 +38,34 @@
 
   imageUploadChooser.addEventListener('change', function () {
     var file = imageUploadChooser.files[0];
-    if (file) {
-      var fileName = file.name.toLowerCase();
+    if (!file) {
+      return;
+    }
+    var fileName = file.name.toLowerCase();
 
-      var matches = FILE_TYPES.some(function (it) {
-        return fileName.endsWith(it);
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      //  создаём елемента img
+      var imgElement = document.createElement('img');
+      //  добавляем кго в поле отбражения
+      imageUploadPreview.appendChild(imgElement);
+      var reader = new FileReader();
+      //  для каждой загрузки изображения добавляем стили как картинке так и принимающему блоку
+      reader.addEventListener('load', function () {
+        imageUploadPreview.style.width = 'auto';
+        imageUploadPreview.style.minWidth = '70px';
+        imgElement.classList.add('ad-form__photo-item');
+        imgElement.src = reader.result;
+        imgElement.width = 75;
+        imgElement.height = 75;
+        imgElement.style.marginRight = '5px';
       });
 
-      if (matches) {
-        //  создаём елемента img
-        var imgElement = document.createElement('img');
-        //  добавляем кго в поле отбражения
-        imageUploadPreview.appendChild(imgElement);
-        var reader = new FileReader();
-        //  для каждой загрузки изображения добавляем стили как картинке так и принимающему блоку
-        reader.addEventListener('load', function () {
-          imageUploadPreview.style.width = 'auto';
-          imageUploadPreview.style.minWidth = '70px';
-          imgElement.classList.add('ad-form__photo-item');
-          imgElement.src = reader.result;
-          imgElement.width = 75;
-          imgElement.height = 75;
-          imgElement.style.marginRight = '5px';
-        });
-
-        reader.readAsDataURL(file);
-      }
+      reader.readAsDataURL(file);
     }
+
   });
 })();

@@ -148,8 +148,9 @@
       if (positionPinY >= 130 - mapPinMainHeigth - 15 && positionPinY <= 630 - mapPinMainHeigth - 15) {
         mapPinMain.style.top = positionPinY + 'px';
       }
+      var halfOfPinWidth = Math.floor((mapPinMainWidth / 2)) * (-1);
       var positionPinX = mapPinMain.offsetLeft - shift.x;
-      if (positionPinX >= Math.floor((mapPinMainWidth / 2)) * (-1) && positionPinX <= mapPinWidth + (Math.floor(mapPinMainWidth / 2)) * (-1)) {
+      if (positionPinX >= halfOfPinWidth && positionPinX <= mapPinWidth + halfOfPinWidth) {
         mapPinMain.style.left = positionPinX + 'px';
       }
       //  новые кординаты pin*a на карте
