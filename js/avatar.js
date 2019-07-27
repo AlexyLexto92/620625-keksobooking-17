@@ -3,9 +3,9 @@
   //  допустимые типы файлов картиновк
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   //  поле вставки картинок
-  var fileChooser = document.querySelector('input[type=file]');
+  var fileChooser = document.querySelector('.ad-form__field input[type=file]');
   //  картинка пина,которую нужно изменить
-  var preview = document.querySelector('.map__pin--main img');
+  var preview = document.querySelector('.ad-form-header__preview img');
   //  событие изменения
   fileChooser.addEventListener('change', function () {
     //   если что-то выбрано
@@ -54,6 +54,8 @@
         //  для каждой загрузки изображения добавляем стили как картинке так и принимающему блоку
         reader.addEventListener('load', function () {
           imageUploadPreview.style.width = 'auto';
+          imageUploadPreview.style.minWidth = '70px';
+          imgElement.classList.add('ad-form__photo-item');
           imgElement.src = reader.result;
           imgElement.width = 75;
           imgElement.height = 75;
