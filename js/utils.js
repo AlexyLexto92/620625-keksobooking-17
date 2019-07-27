@@ -47,6 +47,7 @@
     //  картинка пина,которую изменили
     var preview = document.querySelector('.map__pin--main img');
     preview.src = 'img/muffin-red.svg';
+    window.removeElement('.ad-form__photo-item');
   };
 
   //  сортировка ейтса ,на вход берет массив array

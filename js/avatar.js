@@ -54,6 +54,8 @@
         //  для каждой загрузки изображения добавляем стили как картинке так и принимающему блоку
         reader.addEventListener('load', function () {
           imageUploadPreview.style.width = 'auto';
+          imageUploadPreview.style.minWidth = '70px';
+          imgElement.classList.add('ad-form__photo-item');
           imgElement.src = reader.result;
           imgElement.width = 75;
           imgElement.height = 75;
