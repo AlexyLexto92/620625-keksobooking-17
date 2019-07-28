@@ -1,5 +1,23 @@
 'use strict';
 (function () {
+  window.isEsc = function (evt, action) {
+    if (evt.code === 'Escape') {
+      action();
+    }
+  };
+  //  функция устранения дребезга
+  window.debounce = function (time, cb) {
+    var lastTimeout = null;
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, time);
+    };
+  };
   //  функция добавления/удаления атрибута Disabled в елемента массива
   window.changeElementDisabledAtribute = function (elementArray, bool) {
     for (var i = 0; i < elementArray.length; i++) {
@@ -7,49 +25,11 @@
     }
   };
   //  удаление елементов с карты
-  window.removeElement = function (element) {
+  window.removeElement = function f(element) {
     document.querySelectorAll(element).forEach(function (elem) {
       elem.parentNode.removeChild(elem);
     });
   };
-
-  window.onInactiveState = function () {
-    window.removeElement('.new-pin');
-    window.removeElement('.map__card');
-    document.querySelector('.map').classList.add('map--faded');
-    var formFieldAll = document.querySelector('.ad-form');
-    formFieldAll.classList.add('ad-form--disabled');
-    var formFilters = document.querySelector('.map__filters');
-    formFilters.classList.add('ad-form--disabled');
-    var formFiltersFieldsets = formFilters.querySelectorAll('select');
-    window.changeElementDisabledAtribute(formFiltersFieldsets, true);
-    var formFieldsets = formFieldAll.querySelectorAll('fieldset');
-    window.changeElementDisabledAtribute(formFieldsets, true);
-    document.querySelectorAll('form').forEach(function (elem) {
-      elem.reset();
-    });
-    document.querySelector('.map__pin--main').style.left = '570' + 'px';
-    document.querySelector('.map__pin--main').style.top = '375' + 'px';
-    //  большая метка нанеактивной карте
-    var mapPinMain = document.querySelector('.map__pin--main');
-    //  высота mapPinMain
-    var mapPinMainHeigth = mapPinMain.offsetHeight;
-    //  ширина mapPinMain
-    var mapPinMainWidth = mapPinMain.offsetWidth;
-    //  координаты пина на карте
-    var noticeBlockFormAdress = document.querySelector('#address');
-    var mapPinCordinatY = mapPinMain.offsetTop + mapPinMainHeigth + 15 - 48;
-    var mapPinCordinatX = mapPinMain.offsetLeft + Math.floor((mapPinMainWidth / 2));
-    // помещаемем координаты mapPinCordinats в noticeBlockFormAdress
-    noticeBlockFormAdress.value = mapPinCordinatX + ', ' + mapPinCordinatY;
-    window.isDataLoad = false;
-    window.isAppActive = false;
-    //  картинка пина,которую изменили
-    var preview = document.querySelector('.ad-form-header__preview img');
-    preview.src = 'img/muffin-grey.svg';
-    window.removeElement('.ad-form__photo-item');
-  };
-
   //  сортировка ейтса ,на вход берет массив array
   window.yatesSort = function (array) {
     for (var i = array.length - 1; i > 0; i--) {

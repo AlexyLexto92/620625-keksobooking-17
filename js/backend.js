@@ -5,22 +5,26 @@
   var UPLOAD_URL = 'https://js.dump.academy/keksobooking';
   var STATUS_GOOD = 200;
   var TIMEOUT = 5000;
+  var ARRAY_LENGTH = 5;
+  var ARRAY_FIRST_ELEMENT = 0;
+
   //  функция загрузки данных с сервера
   var load = function (onSuccess, createEror) {
+
+
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-
-
-    //  событие загрузки
     xhr.addEventListener('load', function () {
-      //  успешно
+
       if (xhr.status === STATUS_GOOD) {
-        var response = xhr.response.slice();
+        var response = xhr.response;
+        if (!Array.isArray(response)) {
+          response = [];
+        }
         for (var i = 0; i < response.length; i++) {
           response[i].id = i;
         }
         onSuccess(response);
-        //  ошибка
       } else {
         createEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -33,21 +37,22 @@
     xhr.addEventListener('timeout', function () {
       createEror('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
+    xhr.timeout = TIMEOUT;
+
 
     xhr.open('GET', LOAD_URL);
     xhr.send();
-    xhr.timeout = TIMEOUT;
   };
 
   //  функция загрузки данных на сервер сформы
   var upload = function (data, onSuccess, onEror) {
+
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-
     xhr.addEventListener('load', function () {
+
       if (xhr.status === STATUS_GOOD) {
         onSuccess(xhr.response);
-        //  ошибка
       } else {
         onEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -58,43 +63,39 @@
     xhr.addEventListener('timeout', function () {
       onEror('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
+    xhr.timeout = TIMEOUT;
 
     xhr.open('POST', UPLOAD_URL);
     xhr.send(data);
-  };
 
-  window.backend = {
-    load: load,
-    upload: upload
   };
-
+  var NODE_PARENT = document.querySelector('main');
   /*  ЗАГРУЗКА ДАННЫХ*/
   //  сценарий ошибки загрузки данных
-  var errorParent = document.querySelector('main');
   var errorContainer = document.querySelector('#error')
     .content.querySelector('.error').cloneNode(true);
   var errorMessage = errorContainer.querySelector('.error__message');
   var mapPin = document.querySelector('.map__pins');
 
-  window.createEror = function (message) {
+  var createEror = function (message) {
 
     errorMessage.textContent = message;
-    errorParent.appendChild(errorContainer);
+    NODE_PARENT.appendChild(errorContainer);
     //  обработчик события на кнопку ESC для окна ошибки получения данных
-    var listener = function (evt) {
-      evt.preventDefault();
-      if (evt.keyCode === 27) {
-        window.removeElement('.error');
-        window.onInactiveState();
-        document.removeEventListener('keydown', listener);
-      }
+
+    var onErorClose = function () {
       window.removeElement('.error');
       window.onInactiveState();
-      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('mousedown', onErorClose);
     };
+    var onErorCloseEsc = function (evt) {
+      window.isEsc(evt, onErorClose);
+      document.removeEventListener('keydown', onErorCloseEsc);
+    };
+
     //  закрытие окна ошибки отправки формы
-    document.addEventListener('keydown', listener);
-    document.addEventListener('mousedown', listener);
+    document.addEventListener('keydown', onErorCloseEsc);
+    document.addEventListener('mousedown', onErorClose);
   };
 
   //  функция заполнения массива данными из сервера
@@ -102,7 +103,7 @@
     //  создали пустой массив для данных с сервера
     window.apartmentsList = apartmentServerSideData;
     //  Сортируем исходный массив в рандомном порядке и записываем его в новый массив
-    window.apartmentsListSlice = window.yatesSort(window.apartmentsList).slice(0, 5);
+    window.apartmentsListSlice = window.yatesSort(window.apartmentsList).slice(ARRAY_FIRST_ELEMENT, ARRAY_LENGTH);
     //  задал аргументом новый массив
     window.pinsFragment = window.createPinsFragment(window.apartmentsListSlice);
     //  функция отображения пинов после загрузки карты
@@ -120,32 +121,37 @@
 
   /* ВЫГРУЗКА ДАННЫХ */
   //  реализация окна успешной отправки формы
+  var successContainer = document.querySelector('#success')
+    .content.querySelector('.success').cloneNode(true);
   var createSuccessUpload = function () {
-    var successParent = document.querySelector('main');
-    var successContainer = document.querySelector('#success')
-      .content.querySelector('.success').cloneNode(true);
-    successParent.appendChild(successContainer);
+    NODE_PARENT.appendChild(successContainer);
     window.onInactiveState();
     //  обработчик события на кнопку ESC для окна успешной отправки формы
-    var listener = function (evt) {
-      if (evt.keyCode === 27) {
-        window.removeElement('.success');
-        document.removeEventListener('keydown', listener);
-      }
+
+    var onSuccessClose = function () {
       window.removeElement('.success');
-      document.removeEventListener('click', listener);
+      document.removeEventListener('click', onSuccessClose);
+    };
+    var onSuccessCloseEsc = function (evt) {
+      window.isEsc(evt, onSuccessClose);
+      document.addEventListener('keydown', onSuccessCloseEsc);
     };
     //  закрытие окна успешной отправки формы
-    document.addEventListener('keydown', listener);
-    document.addEventListener('click', listener);
+    document.addEventListener('keydown', onSuccessCloseEsc);
+    document.addEventListener('click', onSuccessClose);
   };
+
   var noticeBlock = document.querySelector('.notice');
   //  форма ввода
   var formBlock = noticeBlock.querySelector('.ad-form');
   //  событие нажатия на кнопку отправки формы
   formBlock.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.upload(new FormData(formBlock), createSuccessUpload, window.createEror);
+    window.backend.upload(new FormData(formBlock), createSuccessUpload, window.backend.createEror);
   });
-
+  window.backend = {
+    load: load,
+    upload: upload,
+    createEror: createEror
+  };
 })();

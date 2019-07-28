@@ -2,6 +2,11 @@
 (function () {
   //  допустимые типы файлов картиновк
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var imageUploadPreviewWidth = 'auto';
+  var imageUploadPreviewMinWidth = '70px';
+  var imgElementWidth = 75;
+  var imgElementHeight = 75;
+  var imgElementMarginRight = '5px';
   //  поле вставки картинок
   var fileChooser = document.querySelector('.ad-form__field input[type=file]');
   //  картинка пина,которую нужно изменить
@@ -53,13 +58,13 @@
         var reader = new FileReader();
         //  для каждой загрузки изображения добавляем стили как картинке так и принимающему блоку
         reader.addEventListener('load', function () {
-          imageUploadPreview.style.width = 'auto';
-          imageUploadPreview.style.minWidth = '70px';
+          imageUploadPreview.style.width = imageUploadPreviewWidth;
+          imageUploadPreview.style.minWidth = imageUploadPreviewMinWidth;
           imgElement.classList.add('ad-form__photo-item');
           imgElement.src = reader.result;
-          imgElement.width = 75;
-          imgElement.height = 75;
-          imgElement.style.marginRight = '5px';
+          imgElement.width = imgElementWidth;
+          imgElement.height = imgElementHeight;
+          imgElement.style.marginRight = imgElementMarginRight;
         });
 
         reader.readAsDataURL(file);

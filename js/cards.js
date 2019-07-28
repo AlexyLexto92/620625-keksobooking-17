@@ -1,55 +1,46 @@
 'use strict';
 (function () {
+
   //  тип жилья
-  var definitionTypeHousing = function (offerType) {
-    switch (offerType) {
-      case 'flat':
-        return 'Квартира';
-      case 'bungalo':
-        return 'Бунгало';
-      case 'house':
-        return 'Дом';
-      case 'palace':
-        return 'Дворец';
-    }
-    return offerType;
+  var housingTypes = {
+    'flat': 'Квартира',
+    'bungalo': 'Бунгало',
+    'house': 'Дом',
+    'palace': 'Дворец',
   };
   //  обработчик закрытия карточки нажатием ESC
-  window.closeCardPopupEsc = function (evt) {
-    if (evt.keyCode === 27) {
-      window.removeElement('.map__card');
-    }
-    document.removeEventListener('keydown', window.closeCardPopupEsc);
+  var onCardPopupCloseEsc = function (evt) {
+    window.isEsc(evt, onCardPopupClose);
   };
 
   //  обработчик закрытия карточки нажатием на елемент
-  window.closeCardPopup = function () {
+  var onCardPopupClose = function () {
     window.removeElement('.map__card');
-    document.removeEventListener('keydown', window.closeCardPopup);
+    document.removeEventListener('keydown', onCardPopupClose);
   };
+  var similarMapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   //  функция отрисовки карточки
-  window.renderCard = function (ads) {
+  var renderCard = function (ads) {
     window.removeElement('.map__card');
-    var similarMapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-    var cardsElement = similarMapCardTemplate.cloneNode(true);
+    var card = similarMapCardTemplate.cloneNode(true);
     //  условие по ТЗ
     if (ads.offer) {
       //  заголовок
-      cardsElement.querySelector('.popup__title').innerText = ads.offer.title;
+      card.querySelector('.popup__title').innerText = ads.offer.title;
       //  аватар
-      cardsElement.querySelector('img').src = ads.author.avatar;
+      card.querySelector('img').src = ads.author.avatar;
       //  адресс
-      cardsElement.querySelector('.popup__text--address').innerText = ads.offer.address;
+      card.querySelector('.popup__text--address').innerText = ads.offer.address;
       //  цена
-      cardsElement.querySelector('.popup__text--price').innerText = ads.offer.price + ' р/ночь';
+      card.querySelector('.popup__text--price').innerText = ads.offer.price + ' р/ночь';
       //  тип жилья
-      cardsElement.querySelector('.popup__type').innerText = definitionTypeHousing(ads.offer.type);
+      card.querySelector('.popup__type').innerText = housingTypes[ads.offer.type];
       //  кол-во комнат / жильцов
-      cardsElement.querySelector('.popup__text--capacity').innerText = 'комнат: ' + ads.offer.rooms + ' гостей: ' + ads.offer.guests;
+      card.querySelector('.popup__text--capacity').innerText = 'комнат: ' + ads.offer.rooms + ' гостей: ' + ads.offer.guests;
       //  вреия заезда/выезда
-      cardsElement.querySelector('.popup__text--time').innerText = 'Заезд после ' + ads.offer.checkin + ', выезд до ' + ads.offer.checkout;
+      card.querySelector('.popup__text--time').innerText = 'Заезд после ' + ads.offer.checkin + ', выезд до ' + ads.offer.checkout;
       //  удобства
-      var cardFature = cardsElement.querySelector('.popup__features');
+      var cardFature = card.querySelector('.popup__features');
       //  очищаем родмтельский елемент от содержимого
       cardFature.innerHTML = ' ';
       //  для каждого елемента массива создаём новый елемент и вставляем его в родительский
@@ -57,9 +48,9 @@
         cardFature.innerHTML += '<li class="popup__feature popup__feature--' + elem + '"></li>';
       });
       //  описание
-      cardsElement.querySelector('.popup__description').innerText = ads.offer.description;
+      card.querySelector('.popup__description').innerText = ads.offer.description;
       //  фотографии
-      var cardPhotos = cardsElement.querySelector('.popup__photos');
+      var cardPhotos = card.querySelector('.popup__photos');
       //  очищаем родмтельский елемент от содержимого
       cardPhotos.innerHTML = '';
       //  для каждого елемента массива создаём новый елемент и вставляем его в родительский
@@ -69,6 +60,11 @@
         }
       });
     }
-    return cardsElement;
+    return card;
+  };
+  window.cards = {
+    onCardPopupCloseEsc: onCardPopupCloseEsc,
+    onCardPopupClose: onCardPopupClose,
+    renderCard: renderCard
   };
 })();

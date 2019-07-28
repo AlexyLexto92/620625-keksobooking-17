@@ -3,6 +3,8 @@
 //  МОДУЛЬ ФОРМЫ
 
 (function () {
+  var ARRAY_FILTERED_LENGTH = 5;
+  var ARRAY_FILTERED_FIRST_ELEMENT = 0;
   var mapPin = document.querySelector('.map__pins');
   var formFieldAll = document.querySelector('.ad-form');
   // находим все fieldset формы обьявления
@@ -28,24 +30,30 @@
   //  5
   //  заголовок обьявления
   var noticeTitle = noticeBlock.querySelector('#title');
+  var noticeTitleMinLength = 30;
+  var noticeTitleMaxLength = 100;
+  var noticePriceMax = 1000000;
+  var noticePriceMin = 0;
   //  добавляем арибуты
-  noticeTitle.setAttribute('minlength', 30);
-  noticeTitle.setAttribute('maxlength', 100);
+  noticeTitle.setAttribute('minlength', noticeTitleMinLength);
+  noticeTitle.setAttribute('maxlength', noticeTitleMaxLength);
   noticeTitle.setAttribute('required', true);
 
 
   //  цена за ночь обьявления
   var noticePrice = noticeBlock.querySelector('#price');
   noticePrice.setAttribute('type', 'number');
-  noticePrice.max = 1000000;
+  noticePrice.max = noticePriceMax;
   //  прописал минимальное значение,что б при первом открытии не уходило в минусовое значение
-  noticePrice.min = 0;
+  noticePrice.min = noticePriceMin;
   noticePrice.setAttribute('required', true);
   // тип жилья обьявления
   var noticeTypeOfHousing = noticeBlock.querySelector('#type');
 
   //  зависимость мин цены от выбора типа жилья цепляем на событие change
-  noticeTypeOfHousing.addEventListener('change', function () {
+
+
+  var onChangeNoticeTypeOfHousing = function () {
 
     switch (noticeTypeOfHousing.value) {
       case 'bungalo':
@@ -65,8 +73,10 @@
         noticePrice.placeholder = '10000';
         break;
     }
-  });
-
+  };
+  noticeTypeOfHousing.addEventListener('change', onChangeNoticeTypeOfHousing);
+  //  запускаем функцию сразу после запуска приложения
+  onChangeNoticeTypeOfHousing();
   //  адрес обьявления
   var noticeAdress = noticeBlock.querySelector('#address');
   //  добавление атрибута координатам обьявления
@@ -119,10 +129,10 @@
   };
 
   //  фильтр стоимости
-  var PriceOfHousing = formFilters.querySelector('#housing-price');
+  var priceOfHousing = formFilters.querySelector('#housing-price');
   var priceOfHousingfilter = function (elem) {
     var priceValue = false;
-    switch (PriceOfHousing.value) {
+    switch (priceOfHousing.value) {
       case 'any':
         priceValue = 'true';
         break;
@@ -140,13 +150,13 @@
 
 
   //  фильтрация по количеству комнат
-  var numOfRums = formFilters.querySelector('#housing-rooms');
+  var numOfRooms = formFilters.querySelector('#housing-rooms');
 
-  var numOfRumsFilter = function (elem) {
-    if (numOfRums.value === 'any') {
+  var numOfRoomsFilter = function (elem) {
+    if (numOfRooms.value === 'any') {
       return true;
     }
-    return elem.offer.rooms === Number(numOfRums.value);
+    return elem.offer.rooms === Number(numOfRooms.value);
   };
   //  фильтрация по количеству гостей
   var numOfGuests = formFilters.querySelector('#housing-guests');
@@ -174,25 +184,18 @@
 
   //  общий фильтр
   var commonFilter = function (elem) {
-    return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRumsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
+    return typeOfHousingFilter(elem) && priceOfHousingfilter(elem) && numOfRoomsFilter(elem) && numOfGuestsFilter(elem) && featuresFilter(elem);
   };
+
   //  событие изменения фильтров пинов
-  var onChangePinFiltersFields = function () {
+  var onChangePinFiltersFields = window.debounce(500, function () {
     //  удаление пинов
     window.removeElement('.new-pin');
     //  удаление карточки
     window.removeElement('.map__card');
-
-    window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(0, 5));
-    //  функция отображения пинов c задержкой времени(устранение дребезга)
-    var lastTimeout;
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    window.setTimeout(function () {
-      mapPin.appendChild(window.pinsFragment);
-    }, 500);
-  };
+    window.pinsFragment = window.createPinsFragment(window.apartmentsList.filter(commonFilter).slice(ARRAY_FILTERED_FIRST_ELEMENT, ARRAY_FILTERED_LENGTH));
+    mapPin.appendChild(window.pinsFragment);
+  });
   //  для каждого елемента массива ставим слушатель
   formFilters.addEventListener('change', onChangePinFiltersFields);
   //  валидация формы количества гостей и кол-ва комнат
@@ -229,11 +232,11 @@
   //  сразу запускаем функцию для первой коректной связи между полями до изменения поля количества комнат
   inputRoomNumberValidation();
   //  и продолжаем при каждом изменении количества комнат
-  var changeinputRoomNumber = function () {
+  var onInputRoomNumberChange = function () {
     inputRoomNumberValidation();
   };
   //  обработчик события изменения количества комнат
-  inputRoomNumber.addEventListener('change', changeinputRoomNumber);
+  inputRoomNumber.addEventListener('change', onInputRoomNumberChange);
   //  реализация функционала кнопки Оистить
   var resetButton = document.querySelector('.ad-form__reset');
   resetButton.addEventListener('click', function (evt) {
