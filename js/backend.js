@@ -8,63 +8,35 @@
   var ARRAY_LENGTH = 5;
   var ARRAY_FIRST_ELEMENT = 0;
 
-  //  функция загрузки данных с сервера
-  var load = function (onSuccess, createEror) {
-
-
+  var sendRequest = function (onSuccess, createEror) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-
       if (xhr.status === STATUS_GOOD) {
-        var response = xhr.response;
-        if (!Array.isArray(response)) {
-          response = [];
-        }
-        for (var i = 0; i < response.length; i++) {
-          response[i].id = i;
-        }
-        onSuccess(response);
+        onSuccess(xhr.response);
       } else {
         createEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
-
     xhr.addEventListener('error', function () {
       createEror('Произошла ошибка соединения');
     });
-
     xhr.addEventListener('timeout', function () {
       createEror('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
     xhr.timeout = TIMEOUT;
+    return xhr;
+  };
+  //  функция загрузки данных с сервера
+  var load = function (onSuccess, createEror) {
 
-
+    var xhr = sendRequest(onSuccess, createEror);
     xhr.open('GET', LOAD_URL);
     xhr.send();
   };
-
   //  функция загрузки данных на сервер сформы
-  var upload = function (data, onSuccess, onEror) {
-
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', function () {
-
-      if (xhr.status === STATUS_GOOD) {
-        onSuccess(xhr.response);
-      } else {
-        onEror('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
-      }
-    });
-    xhr.addEventListener('error', function () {
-      onEror('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
-      onEror('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
-    xhr.timeout = TIMEOUT;
-
+  var upload = function (data, onSuccess, createEror) {
+    var xhr = sendRequest(onSuccess, createEror);
     xhr.open('POST', UPLOAD_URL);
     xhr.send(data);
 
@@ -102,6 +74,10 @@
   window.createDataPin = function (apartmentServerSideData) {
     //  создали пустой массив для данных с сервера
     window.apartmentsList = apartmentServerSideData;
+
+    for (var i = 0; i < window.apartmentsList.length; i++) {
+      window.apartmentsList[i].id = i;
+    }
     //  Сортируем исходный массив в рандомном порядке и записываем его в новый массив
     window.apartmentsListSlice = window.yatesSort(window.apartmentsList).slice(ARRAY_FIRST_ELEMENT, ARRAY_LENGTH);
     //  задал аргументом новый массив
