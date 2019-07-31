@@ -8,7 +8,7 @@
   var ARRAY_LENGTH = 5;
   var ARRAY_FIRST_ELEMENT = 0;
 
-  var sendRequest = function (onSuccess, createEror) {
+  window.sendRequest = function (onSuccess, createEror) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -30,18 +30,18 @@
   //  функция загрузки данных с сервера
   var load = function (onSuccess, createEror) {
 
-    var xhr = sendRequest(onSuccess, createEror);
+    var xhr = window.sendRequest(onSuccess, createEror);
     xhr.open('GET', LOAD_URL);
     xhr.send();
   };
   //  функция загрузки данных на сервер сформы
   var upload = function (data, onSuccess, createEror) {
-    var xhr = sendRequest(onSuccess, createEror);
+    var xhr = window.sendRequest(onSuccess, createEror);
     xhr.open('POST', UPLOAD_URL);
     xhr.send(data);
 
   };
-  var NODE_PARENT = document.querySelector('main');
+  var nodeParent = document.querySelector('main');
   /*  ЗАГРУЗКА ДАННЫХ*/
   //  сценарий ошибки загрузки данных
   var errorContainer = document.querySelector('#error')
@@ -52,7 +52,7 @@
   var createEror = function (message) {
 
     errorMessage.textContent = message;
-    NODE_PARENT.appendChild(errorContainer);
+    nodeParent.appendChild(errorContainer);
     //  обработчик события на кнопку ESC для окна ошибки получения данных
 
     var onErorClose = function () {
@@ -100,7 +100,7 @@
   var successContainer = document.querySelector('#success')
     .content.querySelector('.success').cloneNode(true);
   var createSuccessUpload = function () {
-    NODE_PARENT.appendChild(successContainer);
+    nodeParent.appendChild(successContainer);
     window.onInactiveState();
     //  обработчик события на кнопку ESC для окна успешной отправки формы
 

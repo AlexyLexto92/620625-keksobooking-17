@@ -2,19 +2,18 @@
 (function () {
   //  допустимые типы файлов картиновк
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  var imageUploadPreviewWidth = 'auto';
-  var imageUploadPreviewMinWidth = '70px';
-  var imgElementWidth = 75;
-  var imgElementHeight = 75;
-  var imgElementMarginRight = '5px';
+  var IMAGE_UPLOAD_PREVIEW_WIDTH = 'auto';
+  var IMG_ELEMENT_WIDTH = '75px';
+  var IMG_ELEMENT_HEIGHT = '75px';
+  var IMG_ELEMENT_MARGIN_RIGHT = '5px';
   //  поле вставки картинок
-  var fileChooser = document.querySelector('.ad-form__field input[type=file]');
+  var avatarDropZone = document.querySelector('.ad-form-header__drop-zone');
+  var avatarFileChooser = document.querySelector('.ad-form__field input[type=file]');
   //  картинка пина,которую нужно изменить
-  var preview = document.querySelector('.ad-form-header__preview img');
+  var avatarPreview = document.querySelector('.ad-form-header__preview img');
   //  событие изменения
-  fileChooser.addEventListener('change', function () {
+  var uploadImage = function (file, preview) {
     //   если что-то выбрано
-    var file = fileChooser.files[0];
     //  переводим всё в нижеий регистр для проверки
     var fileName = file.name.toLowerCase();
     //   проверяем  файл имеет ли одно из расширений
@@ -34,41 +33,47 @@
       //  после завершения result-атрибута содержит data:URL-адрес, представляющий данные файла.
       reader.readAsDataURL(file);
     }
+  };
+  avatarFileChooser.addEventListener('change', function () {
+    uploadImage(avatarFileChooser.files[0], avatarPreview);
   });
+
+  avatarDropZone.addEventListener('drop', function (evt) {
+    avatarFileChooser.files = evt.dataTransfer.files;
+    uploadImage(avatarFileChooser.files[0], avatarPreview);
+  });
+  window.addEventListener('drop', function (evt) {
+    evt.preventDefault();
+  });
+  window.addEventListener('dragover', function (evt) {
+    evt.preventDefault();
+  });
+
+
   //  реализация загрузки множества картинок
-  //  поле вставки картинок
-  var imageUploadChooser = document.querySelector('.ad-form__upload input[type=file]');
-  //  поле в которум отображаються картинки
-  var imageUploadPreview = document.querySelector('.ad-form__photo');
+  // Для фотографий
+  var photosDropZone = document.querySelector('.ad-form__drop-zone');
+  var photosFileChooser = document.querySelector('.ad-form__input[type=file]');
+  var photoWrapper = document.querySelector('.ad-form__photo');
+  photoWrapper.style.width = IMAGE_UPLOAD_PREVIEW_WIDTH;
+  var createPhotoPreview = function () {
 
-  imageUploadChooser.addEventListener('change', function () {
-    var file = imageUploadChooser.files[0];
-    if (file) {
-      var fileName = file.name.toLowerCase();
-
-      var matches = FILE_TYPES.some(function (it) {
-        return fileName.endsWith(it);
-      });
-
-      if (matches) {
-        //  создаём елемента img
-        var imgElement = document.createElement('img');
-        //  добавляем кго в поле отбражения
-        imageUploadPreview.appendChild(imgElement);
-        var reader = new FileReader();
-        //  для каждой загрузки изображения добавляем стили как картинке так и принимающему блоку
-        reader.addEventListener('load', function () {
-          imageUploadPreview.style.width = imageUploadPreviewWidth;
-          imageUploadPreview.style.minWidth = imageUploadPreviewMinWidth;
-          imgElement.classList.add('ad-form__photo-item');
-          imgElement.src = reader.result;
-          imgElement.width = imgElementWidth;
-          imgElement.height = imgElementHeight;
-          imgElement.style.marginRight = imgElementMarginRight;
-        });
-
-        reader.readAsDataURL(file);
-      }
-    }
+    var image = document.createElement('img');
+    image.style.width = IMG_ELEMENT_WIDTH;
+    image.style.height = IMG_ELEMENT_HEIGHT;
+    image.style.marginRight = IMG_ELEMENT_MARGIN_RIGHT;
+    photoWrapper.appendChild(image);
+    return image;
+  };
+  photosFileChooser.addEventListener('change', function () {
+    Array.from(photosFileChooser.files).forEach(function (element) {
+      uploadImage(element, createPhotoPreview());
+    });
+  });
+  photosDropZone.addEventListener('drop', function (evt) {
+    photosFileChooser.files = evt.dataTransfer.files;
+    Array.from(photosFileChooser.files).forEach(function (element) {
+      uploadImage(element, createPhotoPreview());
+    });
   });
 })();

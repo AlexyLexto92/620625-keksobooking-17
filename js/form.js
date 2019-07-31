@@ -3,8 +3,14 @@
 //  МОДУЛЬ ФОРМЫ
 
 (function () {
+  var NOTICE_TITLE_MIN_LENGTH = 30;
+  var NOTICE_TITLE_MAX_LENGTH = 100;
+  var NOTICE_PRICE_MAX = 1000000;
+  var NOTICE_PRICE_MIN = 0;
   var ARRAY_FILTERED_LENGTH = 5;
   var ARRAY_FILTERED_FIRST_ELEMENT = 0;
+  var MIN_PRICE_VALUE = 1000;
+  var MAX_PRICE_VALUE = 5000;
   var mapPin = document.querySelector('.map__pins');
   var formFieldAll = document.querySelector('.ad-form');
   // находим все fieldset формы обьявления
@@ -30,22 +36,19 @@
   //  5
   //  заголовок обьявления
   var noticeTitle = noticeBlock.querySelector('#title');
-  var noticeTitleMinLength = 30;
-  var noticeTitleMaxLength = 100;
-  var noticePriceMax = 1000000;
-  var noticePriceMin = 0;
+
   //  добавляем арибуты
-  noticeTitle.setAttribute('minlength', noticeTitleMinLength);
-  noticeTitle.setAttribute('maxlength', noticeTitleMaxLength);
+  noticeTitle.setAttribute('minlength', NOTICE_TITLE_MIN_LENGTH);
+  noticeTitle.setAttribute('maxlength', NOTICE_TITLE_MAX_LENGTH);
   noticeTitle.setAttribute('required', true);
 
 
   //  цена за ночь обьявления
   var noticePrice = noticeBlock.querySelector('#price');
   noticePrice.setAttribute('type', 'number');
-  noticePrice.max = noticePriceMax;
+  noticePrice.max = NOTICE_PRICE_MAX;
   //  прописал минимальное значение,что б при первом открытии не уходило в минусовое значение
-  noticePrice.min = noticePriceMin;
+  noticePrice.min = NOTICE_PRICE_MIN;
   noticePrice.setAttribute('required', true);
   // тип жилья обьявления
   var noticeTypeOfHousing = noticeBlock.querySelector('#type');
@@ -137,13 +140,13 @@
         priceValue = 'true';
         break;
       case 'low':
-        priceValue = elem.offer.price <= 10000;
+        priceValue = elem.offer.price <= MIN_PRICE_VALUE;
         break;
       case 'high':
-        priceValue = elem.offer.price >= 50000;
+        priceValue = elem.offer.price >= MAX_PRICE_VALUE;
         break;
       case 'middle':
-        priceValue = elem.offer.price >= 10000 && elem.offer.price <= 50000;
+        priceValue = elem.offer.price >= MIN_PRICE_VALUE && elem.offer.price <= MAX_PRICE_VALUE;
     }
     return priceValue;
   };

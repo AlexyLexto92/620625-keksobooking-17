@@ -12,7 +12,7 @@
   var PIN_START_COORDINATE_X = 570;
   var PIN_START_COORDINATE_Y = 375;
   var mapPin = document.querySelector('.map__pins');
-  var mapPinWidth = 1200; //  ширина окна
+  var MAP_PIN_WIDTH = 1200; //  ширина окна
   //  большая метка нанеактивной карте
   var mapPinMain = document.querySelector('.map__pin--main');
 
@@ -153,7 +153,7 @@
       }
       var halfOfPinWidth = Math.floor((mapPinMainWidth / 2)) * (-1);
       var positionPinX = mapPinMain.offsetLeft - shift.x;
-      if (positionPinX >= halfOfPinWidth && positionPinX <= mapPinWidth + halfOfPinWidth) {
+      if (positionPinX >= halfOfPinWidth && positionPinX <= MAP_PIN_WIDTH + halfOfPinWidth) {
         mapPinMain.style.left = positionPinX + 'px';
       }
       //  новые кординаты pin*a на карте

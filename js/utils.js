@@ -1,7 +1,8 @@
 'use strict';
 (function () {
+  var ESC_BUTOON = 'Escape';
   window.isEsc = function (evt, action) {
-    if (evt.code === 'Escape') {
+    if (evt.code === ESC_BUTOON) {
       action();
     }
   };
